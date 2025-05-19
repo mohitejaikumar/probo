@@ -1,0 +1,22 @@
+{
+  "name": "@repo/db",
+  "version": "1.0.0",
+  "keywords": [],
+  "type": "module",
+  "private": "true",
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "generate:component": "turbo gen react-component",
+    "check-types": "tsc --noEmit"
+  },
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.8.2",
+    "prisma": "^6.8.2"
+  }
+}
