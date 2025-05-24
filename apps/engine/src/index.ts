@@ -1,6 +1,13 @@
 import express from "express";
 import cors from "cors";
 import { queue } from "./redis-clients";
+import {
+  userBalance,
+  userCreation,
+  userLogin,
+  userRecharge,
+} from "./routers/users";
+import { getAllEvents, getEvent } from "./routers/events";
 
 const app = express();
 
@@ -19,10 +26,28 @@ async function processingQueue() {
 
     switch (type) {
       case "userCreation":
+        await userCreation(message);
+        break;
+      case "userLogin":
+        await userLogin(message);
+        break;
+      case "userBalance":
+        await userBalance(message);
+        break;
+      case "userRecharge":
+        await userRecharge(message);
+        break;
+      case "getAllEvents":
+        await getAllEvents(message);
+        break;
+      case "getEvent":
+        await getEvent(message);
         break;
     }
   }
 }
+
+processingQueue();
 
 app.listen(3001, () => {
   console.log("Engine listening on port 3001");

@@ -26,11 +26,12 @@ export interface OrderInterface {
   eventId: string;
   side: Sides;
   type: OrderType;
+  status: string;
   price: number;
   quantity: number;
 }
 
-export interface Events {
+export interface Event {
   title: string;
   description: string;
 }
