@@ -37,6 +37,7 @@ export interface Event {
 }
 
 export interface Trades {
+  tradeId: string;
   sellerId: string;
   buyerId: string;
   eventId: string;

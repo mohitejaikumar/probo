@@ -19,6 +19,30 @@ async function startEngine() {
   publisher.on("error", (error) => {
     console.log("Error occured in publisher", error);
   });
+
+  await inititalizeStremGroups();
+}
+
+async function inititalizeStremGroups() {
+  try {
+    await publisher.xGroupCreate("event_stream", "ws_broadcaster", "$", {
+      MKSTREAM: true,
+    });
+  } catch (error: any) {
+    if (error.message.includes("BUSYGROUP")) {
+      console.log("Consumer grp already exists");
+    }
+    console.log(error);
+  }
+}
+
+export async function BroadcastChannel(eventType: string, data: any) {
+  const streamData = {
+    type: eventType,
+    data: JSON.stringify(data),
+  };
+
+  await publisher.xAdd("event_stream", "*", streamData);
 }
 
 startEngine();
