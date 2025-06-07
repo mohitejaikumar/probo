@@ -8,6 +8,7 @@ import {
   userRecharge,
 } from "./routers/users";
 import {
+  createEvent,
   exitOrder,
   getAllEvents,
   getEvent,
@@ -54,6 +55,8 @@ async function processingQueue() {
       case "exitOrder":
         await exitOrder(message);
         break;
+      case "eventCreation":
+        await createEvent(message);
     }
   }
 }

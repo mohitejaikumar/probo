@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build":"npx tsc -b",
-    "start":"npm run build && node dist/index.js"
+    "build": "esbuild src/index.ts --platform=node --bundle --outdir=dist",
+    "start": "npm run build && node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,7 @@
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "cors": "^2.8.5",
+    "esbuild": "^0.25.5",
     "express": "^5.1.0",
     "redis": "^5.0.1"
   }

@@ -25,7 +25,7 @@ async function startEngine() {
 
 async function inititalizeStremGroups() {
   try {
-    await publisher.xGroupCreate("event_stream", "broadcast_consumer", "$", {
+    await publisher.xGroupCreate("event_streams", "broadcast_consumer", "$", {
       MKSTREAM: true,
     });
   } catch (error: any) {
@@ -42,7 +42,7 @@ export async function BroadcastChannel(eventType: string, data: any) {
     data: JSON.stringify(data),
   };
 
-  await publisher.xAdd("event_stream", "*", streamData);
+  await publisher.xAdd("event_streams", "*", streamData);
 }
 
 startEngine();

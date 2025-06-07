@@ -1,8 +1,7 @@
-import WebSocket from "ws";
+import WebSocket, { WebSocketServer } from "ws";
 import { InMemoryOrderBook } from "./store";
 
 export class BroadCaster {
-  static wss: WebSocket.Server;
   static clients: {
     ws: WebSocket;
     eventId: string;
@@ -10,11 +9,11 @@ export class BroadCaster {
   static instance: BroadCaster | null;
   constructor() {
     BroadCaster.clients = [];
-    BroadCaster.wss = new WebSocket.Server({
+    const wss = new WebSocketServer({
       port: 8080,
     });
 
-    BroadCaster.wss.on("connection", (ws: WebSocket) => {
+    wss.on("connection", (ws: WebSocket) => {
       ws.on("message", async (message: string) => {
         const parseMessage = JSON.parse(message);
         const eventId = parseMessage.eventId;

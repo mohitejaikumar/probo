@@ -1,7 +1,7 @@
 // if id= '>' in redis then see the messages not delivered to other consumers
 //  id is != '>' then all the pending messages in history which is not processed by this consumer
 
-import { Orderbook } from "@repo/types";
+import { Orderbook } from "@repo/types/src";
 import { redis } from "./redis-client";
 import { InMemoryOrderBook } from "./store";
 import { BroadCaster } from "./broadcaster";
@@ -26,7 +26,7 @@ async function processStreams() {
         COUNT: 1,
       }
     );
-
+    console.log(JSON.stringify(message, null, 2));
     if (message && Array.isArray(message) && message.length > 0) {
       const streamedMessage = message[0] as {
         name: string;
@@ -46,11 +46,8 @@ async function processStreams() {
           ({ id, message }: { id: string; message: any }) => {
             const parsedData = JSON.parse(message.data);
             const eventId = parsedData.eventId;
-            const orderbook = parsedData.orderbook as Orderbook;
-            InMemoryOrderBook[eventId] = orderbook;
-
-            console.log(`event::${eventId}`, orderbook);
-            BroadCaster.getInstance().broadCast(eventId, orderbook);
+            console.log(`event::${eventId}`, parsedData);
+            BroadCaster.getInstance().broadCast(eventId, parsedData);
           }
         );
       }

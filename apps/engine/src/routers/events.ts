@@ -38,6 +38,26 @@ export async function getEvent(message: any) {
   }
 }
 
+export async function createEvent(message: any) {
+  const { messageId, title, description } = message;
+  const eventId = createId();
+  const data = JSON.stringify({
+    messageId,
+    eventId,
+    status: "SUCCESS",
+  });
+  InMemoryEvents[eventId] = {
+    title,
+    description,
+  };
+  InMemoryOrderBook[eventId] = {
+    NO: [],
+    YES: [],
+  };
+  await publisher.publish(`eventCreation::${messageId}`, data);
+  return;
+}
+
 export function getOppSide(mySide: Sides) {
   if (Sides.YES) return Sides.NO;
   return Sides.YES;
@@ -58,15 +78,16 @@ export const initiateOrder = async (message: any) => {
     !price ||
     !quantity ||
     !messageId ||
-    InMemoryINRBalances[userId] ||
-    InMemoryINRBalances[userId]!.balance < price * quantity ||
+    !InMemoryINRBalances[userId] ||
+    (InMemoryINRBalances[userId] &&
+      InMemoryINRBalances[userId]!.balance < price * quantity) ||
     !InMemoryOrderBook[eventId]
   ) {
     const data = JSON.stringify({
       messageId,
       status: "FAILED",
     });
-    publisher.publish("initiateOrder", data);
+    await publisher.publish(`initiateOrder::${messageId}`, data);
     return;
   }
   // Add entry to orders
@@ -91,7 +112,7 @@ export const initiateOrder = async (message: any) => {
     messageId,
     status: "SUCCESS",
   });
-  publisher.publish("initiateOrder", data);
+  await publisher.publish(`initiateOrder::${messageId}`, data);
   return;
 };
 
@@ -162,6 +183,7 @@ export const initiateOrderLogic = async (
             // broadcast this message
             const update = {
               id: sellerOrderId,
+              eventId: eventId,
               type: "SELL",
             };
             await BroadcastChannel("order_update", update);
@@ -178,6 +200,7 @@ export const initiateOrderLogic = async (
             }
             const update = {
               id: sellerOrderId,
+              eventId,
               type: "BUY",
             };
             await BroadcastChannel("order_update", update);
@@ -224,34 +247,43 @@ export const initiateOrderLogic = async (
   }
 
   // case3 (pseudo order)
-  orderbook[oppType].forEach(async (oppOrder) => {
-    if (oppOrder.price === 10 - price) {
-      oppOrder.quantity += remainingQty;
-      if (!oppOrder.userOrders) {
-        oppOrder.userOrders = [];
-      }
-      oppOrder.userOrders.push({
+  if (remainingQty > 0) {
+    const orderWithMyOppPrice = orderbook[oppType].find(
+      (order) => order.price === 10 - price
+    );
+
+    if (orderWithMyOppPrice != undefined) {
+      orderWithMyOppPrice.quantity += remainingQty;
+      orderWithMyOppPrice.userOrders.push({
         userId,
         orderId,
         quantity: remainingQty,
       });
-      const pseudoOrderId = orderId + "+pseudo";
-      InMemoryOrders[pseudoOrderId] = InMemoryOrders[orderId]!;
-      InMemoryOrders[pseudoOrderId]!.type = OrderType.SELL;
-      InMemoryOrders[pseudoOrderId]!.side =
-        getOppSideString(side) == "NO" ? Sides.NO : Sides.YES;
-      InMemoryOrders[pseudoOrderId].quantity = remainingQty;
-      // PURE BALANCE WITH SELLTYPE
-      InMemoryOrders[orderId]!.quantity -= remainingQty;
-
-      const update = {
-        id: pseudoOrderId,
-        type: "SELL",
-      };
-      await BroadcastChannel("order_update", update);
-      remainingQty = 0;
+    } else {
+      orderbook[oppType].push({
+        price: 10 - price,
+        quantity: remainingQty,
+        userOrders: [
+          {
+            userId,
+            orderId,
+            quantity: remainingQty,
+          },
+        ],
+      });
     }
-  });
+    const pseudoOrderId = orderId + "+pseudo";
+    InMemoryOrders[pseudoOrderId] = InMemoryOrders[orderId]!;
+    InMemoryOrders[pseudoOrderId]!.type = OrderType.SELL;
+    InMemoryOrders[pseudoOrderId]!.side =
+      getOppSideString(side) == "NO" ? Sides.NO : Sides.YES;
+    InMemoryOrders[pseudoOrderId].quantity = remainingQty;
+    // PURE BALANCE WITH SELLTYPE
+    InMemoryOrders[orderId]!.quantity -= remainingQty;
+    remainingQty = 0;
+  } else {
+    InMemoryOrders[orderId]!.status = "MATCHED";
+  }
 
   const broadcastOrderBook = {
     eventId,
@@ -282,7 +314,7 @@ export const exitOrder = async (message: any) => {
       messageId,
       status: "FAILED",
     });
-    await publisher.publish("orderExit", data);
+    await publisher.publish(`exitOrder::${messageId}`, data);
     return;
   }
   // do core logic call
@@ -291,7 +323,7 @@ export const exitOrder = async (message: any) => {
     messageId,
     status: "SUCCESS",
   });
-  await publisher.publish("orderExit", data);
+  await publisher.publish(`exitOrder::${messageId}`, data);
 };
 
 export async function exit(
@@ -357,6 +389,7 @@ export async function exit(
   if (remainingQty == 0) {
     const orderExit = {
       id: orderId,
+      eventId,
       status: "EXECUTED",
     };
     await BroadcastChannel("order_exit", orderExit);
@@ -370,7 +403,7 @@ export async function exit(
     if (ordersWithMyPrice.length == 0) {
       orderbook[side].push({
         price,
-        quantity,
+        quantity: remainingQty,
         userOrders: [
           {
             orderId,
@@ -382,6 +415,7 @@ export async function exit(
     } else {
       orderbook[side].forEach((order) => {
         if (order.price == price) {
+          order.quantity += remainingQty;
           order.userOrders.push({
             orderId,
             quantity: remainingQty,
@@ -390,11 +424,6 @@ export async function exit(
         }
       });
     }
-    const update = {
-      id: orderId,
-      type: "SELL",
-    };
-    await BroadcastChannel("order_update", update);
   }
   const broadcastData = {
     eventId,

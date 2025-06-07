@@ -65,6 +65,7 @@ export async function userRecharge(message: any) {
 
   if (InMemoryINRBalances[userId]) {
     InMemoryINRBalances[userId].balance += amount;
+    
     const data = JSON.stringify({
       status: "SUCCESS",
       messageId,

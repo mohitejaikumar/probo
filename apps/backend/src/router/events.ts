@@ -37,6 +37,40 @@ router.get("/:eventId", async (req, res) => {
   await queue.lPush("engineQueue", data);
 });
 
+router.post("/", async (req, res) => {
+  const { title, description } = req.body;
+  if (!title || !description) {
+    res.status(400).json({
+      message: "Invalid Inputs",
+    });
+    return;
+  }
+  const messageId = createId();
+  const data = JSON.stringify({
+    title,
+    description,
+    messageId,
+    type: "eventCreation",
+  });
+
+  await subscriber.subscribe(`eventCreation::${messageId}`, async (data) => {
+    const parseData = JSON.parse(data);
+    await subscriber.unsubscribe(`eventCreation::${messageId}`);
+    if (parseData.messageId == messageId && parseData.status == "SUCCESS") {
+      res.json({
+        eventId: parseData.eventId,
+      });
+      return;
+    }
+    res.json({
+      message: `Error in event creation with title: ${title}`,
+    });
+    return;
+  });
+  console.log(`queued the event::${messageId}`);
+  await queue.lPush("engineQueue", data);
+});
+
 router.get("/", async (req, res) => {
   const messageId = createId();
   const data = JSON.stringify({
