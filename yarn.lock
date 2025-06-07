@@ -468,6 +468,13 @@
   resolved "https://registry.npmjs.org/@types/tinycolor2/-/tinycolor2-1.4.6.tgz"
   integrity sha512-iEN8J0BoMnsWBqjVbWH/c0G0Hh7O21lpR2/+PrvAVgWdzL7eexIFm4JN/Wn10PTcmNdtS6U67r499mlWMXOxNw==
 
+"@types/ws@^8.18.1":
+  version "8.18.1"
+  resolved "https://registry.npmjs.org/@types/ws/-/ws-8.18.1.tgz"
+  integrity sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==
+  dependencies:
+    "@types/node" "*"
+
 "@typescript-eslint/eslint-plugin@8.32.1":
   version "8.32.1"
   resolved "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.32.1.tgz"
@@ -737,6 +744,7 @@ available-typed-arrays@^1.0.7:
   version "1.0.0"
   resolved "file:apps/backend"
   dependencies:
+    "@paralleldrive/cuid2" "^2.2.2"
     "@repo/db" "*"
     "@types/cors" "^2.8.18"
     "@types/express" "^5.0.2"
@@ -1199,6 +1207,7 @@ encodeurl@^2.0.0:
   version "1.0.0"
   resolved "file:apps/engine"
   dependencies:
+    "@paralleldrive/cuid2" "^2.2.2"
     "@repo/types" "*"
     "@types/cors" "^2.8.18"
     "@types/express" "^5.0.2"
@@ -3739,6 +3748,12 @@ wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
+"websocket@file:G:\\probo\\apps\\websocket":
+  version "1.0.0"
+  resolved "file:apps/websocket"
+  dependencies:
+    ws "^8.18.2"
+
 which-boxed-primitive@^1.1.0, which-boxed-primitive@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/which-boxed-primitive/-/which-boxed-primitive-1.1.1.tgz"
@@ -3822,6 +3837,11 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz"
   integrity sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==
+
+ws@^8.18.2:
+  version "8.18.2"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.18.2.tgz"
+  integrity sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==
 
 yn@3.1.1:
   version "3.1.1"

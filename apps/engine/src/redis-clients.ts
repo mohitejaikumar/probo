@@ -25,7 +25,7 @@ async function startEngine() {
 
 async function inititalizeStremGroups() {
   try {
-    await publisher.xGroupCreate("event_stream", "ws_broadcaster", "$", {
+    await publisher.xGroupCreate("event_stream", "broadcast_consumer", "$", {
       MKSTREAM: true,
     });
   } catch (error: any) {

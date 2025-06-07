@@ -7,7 +7,12 @@ import {
   userLogin,
   userRecharge,
 } from "./routers/users";
-import { getAllEvents, getEvent } from "./routers/events";
+import {
+  exitOrder,
+  getAllEvents,
+  getEvent,
+  initiateOrder,
+} from "./routers/events";
 
 const app = express();
 
@@ -16,7 +21,7 @@ app.use(cors());
 
 async function processingQueue() {
   while (true) {
-    const data = await queue.brPop("eventQueue", 0);
+    const data = await queue.brPop("engineQueue", 0);
     if (!data) continue;
     const { element } = data;
     const message = JSON.parse(element);
@@ -42,6 +47,12 @@ async function processingQueue() {
         break;
       case "getEvent":
         await getEvent(message);
+        break;
+      case "initiateOrder":
+        await initiateOrder(message);
+        break;
+      case "exitOrder":
+        await exitOrder(message);
         break;
     }
   }

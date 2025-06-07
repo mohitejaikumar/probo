@@ -1,7 +1,7 @@
 import { createClient } from "redis";
 
-const queue = createClient();
-const subscriber = createClient();
+export const queue = createClient();
+export const subscriber = createClient();
 
 async function startRedis() {
   await queue.connect().then(() => {

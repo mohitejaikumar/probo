@@ -312,45 +312,48 @@ export async function exit(
     if (order.price === sellprice && remainingQty > 0) {
       let tradeQty = Math.min(remainingQty, order.quantity);
       for (let i = 0; i < order.userOrders.length; i++) {
-        const sellerOrder = order.userOrders[i];
-        const sellerQuantity = Math.min(tradeQty, sellerOrder?.quantity!);
-        if (sellerOrder == undefined) {
-          order.userOrders.shift();
-          continue;
-        }
-        const sellerOrderId = sellerOrder.orderId;
-        if (sellerOrderId.endsWith("+pseudo")) {
-          continue;
-        }
+        if (tradeQty > 0) {
+          const sellerOrder = order.userOrders[i];
+          const sellerQuantity = Math.min(tradeQty, sellerOrder?.quantity!);
+          if (sellerOrder == undefined) {
+            order.userOrders.shift();
+            continue;
+          }
+          const sellerOrderId = sellerOrder.orderId;
+          if (sellerOrderId.endsWith("+pseudo")) {
+            continue;
+          }
 
-        const tradeId = createId();
+          const tradeId = createId();
 
-        InMemoryTrades[tradeId] = {
-          tradeId,
-          buyerId: sellerOrder.userId,
-          buyOrderId: sellerOrderId,
-          buyPrice: sellprice,
-          buyQuantity: sellerQuantity,
-          eventId,
-          sellerId: userId,
-          sellOrderId: orderId,
-          sellPrice: price,
-          sellQuantity: sellerQuantity,
-        };
-        await BroadcastChannel("trade", InMemoryTrades[tradeId]);
+          InMemoryTrades[tradeId] = {
+            tradeId,
+            buyerId: sellerOrder.userId,
+            buyOrderId: sellerOrderId,
+            buyPrice: sellprice,
+            buyQuantity: sellerQuantity,
+            eventId,
+            sellerId: userId,
+            sellOrderId: orderId,
+            sellPrice: price,
+            sellQuantity: sellerQuantity,
+          };
+          await BroadcastChannel("trade", InMemoryTrades[tradeId]);
 
-        // Balances
-        sellerOrder.quantity -= sellerQuantity;
-        remainingQty -= sellerQuantity;
-        tradeQty -= sellerQuantity;
-        if (sellerOrder.quantity == 0) {
-          InMemoryOrders[sellerOrderId]!.status = "EXECUTED";
-          order.userOrders.splice(i, 1);
-          i--;
+          // Balances
+          sellerOrder.quantity -= sellerQuantity;
+          remainingQty -= sellerQuantity;
+          tradeQty -= sellerQuantity;
+          if (sellerOrder.quantity == 0) {
+            InMemoryOrders[sellerOrderId]!.status = "EXECUTED";
+            order.userOrders.splice(i, 1);
+            i--;
+          }
         }
       }
     }
   });
+  InMemoryINRBalances[userId]!.balance += (quantity - remainingQty) * price;
   if (remainingQty == 0) {
     const orderExit = {
       id: orderId,
