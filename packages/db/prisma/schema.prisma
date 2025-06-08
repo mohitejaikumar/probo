@@ -6,4 +6,58 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-} 
+}
+
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  endTime     DateTime
+}
+
+model Order {
+  id       String      @id @default(cuid())
+  userId   String
+  eventId  String
+  quantity Int
+  side     TradeSide
+  type     OrderType
+  price    Float
+  status   OrderStatus
+}
+
+model Trade {
+  id            String   @id @default(cuid())
+  eventId       String
+  buyerId       String
+  sellerId      String
+  sellQty       String
+  buyQty        String
+  buyPrice      Float
+  sellPrice     Float
+  buyerOrderId  String
+  sellerOrderId String
+  createdAt     DateTime @default(now())
+}
+
+enum TradeSide {
+  YES
+  NO
+}
+
+enum OrderType {
+  BUY
+  SELL
+}
+
+enum OrderStatus {
+  LIVE
+  EXECUTED
+  MATCHED
+}

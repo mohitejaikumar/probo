@@ -120,6 +120,7 @@ router.get("/balance/:userId", async (req, res) => {
     if ((parseData.messageId = messageId && parseData.status == "SUCCESS")) {
       res.json({
         message: `User has intotal: ${parseData.balance}`,
+        balance: parseData.balance,
       });
       return;
     }
