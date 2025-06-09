@@ -42,9 +42,9 @@ export const authOptions: NextAuthOptions = {
         // check user in db
         // add the user to db
         const userId = "1";
-        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND}/v1/user/login`, {
-          userId,
-        });
+        // await axios.post(`${process.env.NEXT_PUBLIC_BACKEND}/v1/user/login`, {
+        //   userId,
+        // });
         user.id = userId;
       } catch (error) {
         console.error("Error", error);

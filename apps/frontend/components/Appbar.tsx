@@ -2,48 +2,27 @@
 
 import Link from "next/link";
 import { Profile } from "./Profile";
-import { House, BriefcaseBusiness } from "lucide-react";
-import { useState } from "react";
-
-interface NavItem {
-  title: string;
-  link: string;
-  svg: React.ReactNode;
-}
+import Image from "next/image";
 
 export default function Appbar() {
-  const menuItems: NavItem[] = [
-    {
-      title: "Home",
-      link: "/home",
-      svg: <House />,
-    },
-    {
-      title: "Portfolio",
-      link: "/portfolio",
-      svg: <BriefcaseBusiness />,
-    },
-  ];
   return (
-    <nav className=" inset-x-0 top-0 backdrop-blur-2xl z-50 border-y-2 border-neutral-300 shadow-md fixed">
-      <div className="w-full mx-auto px-4">
-        <div className="flex justify-between h-20 items-center">
-          <Link
-            className="flex items-center md:text-3xl text-xl font-bold text-black group hover:text-neutral-700"
-            href={"/"}>
-            <span>OpinionTrade</span>
+    <nav className="bg-[#F3F3F3] md:inset-x-16 inset-x-0 backdrop-blur-2xl z-[1000] border-b-1 border-neutral-200  fixed">
+      <div className="w-full mx-auto px-4 md:px-0">
+        <div className="flex justify-between items-center">
+          <Link href={"/"}>
+            <div className="w-[80px] md:w-[8vw] h-[60px] relative bg-[#F3F3F3]">
+              <Image
+                src="https://probo.in/_next/image?url=https%3A%2F%2Fd39axbyagw7ipf.cloudfront.net%2Fimages%2Flogo-sm.webp&w=128&q=75"
+                alt="probo logo"
+                fill
+                unoptimized
+                style={{
+                  objectFit: "contain",
+                }}
+              />
+            </div>
           </Link>
           <div className="flex items-center justify-between gap-10">
-            <nav className="hidden md:flex gap-10">
-              {menuItems.map((item, index) => (
-                <NavBar
-                  title={item.title}
-                  link={item.link}
-                  key={index}
-                  svg={item.svg}
-                />
-              ))}
-            </nav>
             <Profile />
           </div>
         </div>
@@ -51,15 +30,3 @@ export default function Appbar() {
     </nav>
   );
 }
-
-export const NavBar = ({ title, link, svg }: NavItem) => {
-  return (
-    <Link
-      onClick={() => {}}
-      className=" text-xl flex items-center flex-col "
-      href={link}>
-      {svg}
-      <h1 className="text-neutral-700">{title}</h1>
-    </Link>
-  );
-};

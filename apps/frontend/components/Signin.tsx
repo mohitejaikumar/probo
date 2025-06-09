@@ -20,7 +20,7 @@ export function Login() {
   const isLoading = status === "loading";
 
   async function handleSignIn() {
-    const result = await signIn("google", { redirect: false });
+    const result = await signIn("google");
 
     if (result?.error) {
       toast.error("Error signing in, please try again.");
