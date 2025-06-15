@@ -1,10 +1,11 @@
 import { createId } from "@paralleldrive/cuid2";
 import { Router } from "express";
 import { queue, subscriber } from "../redis-clients.js";
+import handleMiddleWare from "../middleware.js";
 
 const router = Router();
 
-router.get("/:eventId", async (req, res) => {
+router.get("/:eventId", handleMiddleWare, async (req, res) => {
   const eventId = req.params.eventId;
   if (eventId == "") {
     res.json({
@@ -37,9 +38,9 @@ router.get("/:eventId", async (req, res) => {
   await queue.lPush("engineQueue", data);
 });
 
-router.post("/", async (req, res) => {
-  const { title, description } = req.body;
-  if (!title || !description) {
+router.post("/", handleMiddleWare, async (req, res) => {
+  const { title, description, endTime } = req.body;
+  if (!title || !description || !endTime) {
     res.status(400).json({
       message: "Invalid Inputs",
     });
@@ -50,6 +51,7 @@ router.post("/", async (req, res) => {
     title,
     description,
     messageId,
+    endTime,
     type: "eventCreation",
   });
 
@@ -82,7 +84,9 @@ router.get("/", async (req, res) => {
     const parseData = JSON.parse(data);
     await subscriber.unsubscribe(`getEvents::${messageId}`);
     if (parseData.messageId == messageId && parseData.status == "SUCCESS") {
-      res.json(parseData.events);
+      res.json({
+        events: parseData.events,
+      });
       return;
     }
     res.status(500).json({
@@ -94,7 +98,7 @@ router.get("/", async (req, res) => {
   await queue.lPush("engineQueue", data);
 });
 
-router.post("/initiate", async (req, res) => {
+router.post("/initiate", handleMiddleWare, async (req, res) => {
   const { userId, eventId, side, price, quantity } = req.body;
 
   if (!userId || !eventId || !side || !price || !quantity) {
@@ -132,7 +136,7 @@ router.post("/initiate", async (req, res) => {
   await queue.lPush("engineQueue", data);
 });
 
-router.post("/exit", async (req, res) => {
+router.post("/exit", handleMiddleWare, async (req, res) => {
   const { userId, eventId, orderId, side, price, quantity } = req.body;
 
   if (!userId || !eventId || !orderId || !side || !price || !quantity) {

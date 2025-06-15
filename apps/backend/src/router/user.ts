@@ -1,10 +1,11 @@
 import { createId } from "@paralleldrive/cuid2";
 import { Router } from "express";
 import { queue, subscriber } from "../redis-clients.js";
+import handleMiddleWare from "../middleware.js";
 
 const router = Router();
 
-router.post("/login", async (req, res) => {
+router.post("/login", handleMiddleWare, async (req, res) => {
   const { userId } = req.body;
 
   if (!userId) {
@@ -24,11 +25,13 @@ router.post("/login", async (req, res) => {
     const parseData = JSON.parse(data);
     await subscriber.unsubscribe(`userLogin::${messageId}`);
     if ((parseData.messageId = messageId && parseData.status == "SUCCESS")) {
+      console.log("user login success");
       res.json({
         message: "user login successfull",
       });
       return;
     }
+    console.log("user login failed");
     res.status(404).json({
       message: "User not found",
     });
@@ -38,9 +41,9 @@ router.post("/login", async (req, res) => {
   await queue.lPush("engineQueue", data);
 });
 
-router.post("/signUp", async (req, res) => {
+router.post("/signUp", handleMiddleWare, async (req, res) => {
+  const { userId } = req.body;
   const messageId = createId();
-  const userId = createId();
   const data = JSON.stringify({
     userId,
     messageId,
@@ -65,7 +68,7 @@ router.post("/signUp", async (req, res) => {
   await queue.lPush("engineQueue", data);
 });
 
-router.post("/recharge", async (req, res) => {
+router.post("/recharge", handleMiddleWare, async (req, res) => {
   const { userId, amount } = req.body;
 
   if (!userId || !amount) {
@@ -99,7 +102,7 @@ router.post("/recharge", async (req, res) => {
   await queue.lPush("engineQueue", data);
 });
 
-router.get("/balance/:userId", async (req, res) => {
+router.get("/balance/:userId", handleMiddleWare, async (req, res) => {
   const userId = req.params.userId;
 
   if (userId == "") {

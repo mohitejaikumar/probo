@@ -3,7 +3,7 @@
 
 import { Orderbook } from "@repo/types/src";
 import { redis } from "./redis-client";
-import { InMemoryOrderBook } from "./store";
+import { InMemoryOrderBook, InMemoryTrades } from "./store";
 import { BroadCaster } from "./broadcaster";
 
 async function processStreams() {
@@ -26,7 +26,6 @@ async function processStreams() {
         COUNT: 1,
       }
     );
-    console.log(JSON.stringify(message, null, 2));
     if (message && Array.isArray(message) && message.length > 0) {
       const streamedMessage = message[0] as {
         name: string;
@@ -44,10 +43,16 @@ async function processStreams() {
 
         actuallMessages.forEach(
           ({ id, message }: { id: string; message: any }) => {
+            console.log("message", message);
             const parsedData = JSON.parse(message.data);
             const eventId = parsedData.eventId;
-            console.log(`event::${eventId}`, parsedData);
-            BroadCaster.getInstance().broadCast(eventId, parsedData);
+            if (message.type == "orderbook") {
+              InMemoryOrderBook[eventId] = parsedData.orderbook;
+            }
+            if (message.type == "trade") {
+              InMemoryTrades.unshift(parsedData);
+            }
+            BroadCaster.getInstance().broadCast(eventId, message);
           }
         );
       }
@@ -56,5 +61,5 @@ async function processStreams() {
     }
   }
 }
-
+BroadCaster.getInstance();
 processStreams();

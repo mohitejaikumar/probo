@@ -24,8 +24,8 @@ export interface OrderInterface {
   orderId: string;
   userId: string;
   eventId: string;
-  side: Sides;
-  type: OrderType;
+  side: "YES" | "NO";
+  type: "BUY" | "SELL";
   status: string;
   price: number;
   quantity: number;
@@ -34,6 +34,7 @@ export interface OrderInterface {
 export interface Event {
   title: string;
   description: string;
+  endTime: Date;
 }
 
 export interface Trades {

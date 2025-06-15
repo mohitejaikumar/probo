@@ -1,24 +1,32 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { SquareMinus, SquarePlus } from "lucide-react";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 export default function OrderPlace({
   currentYesBuyPrice,
   currentNoBuyPrice,
   userBalance,
+  eventId,
 }: {
   currentYesBuyPrice: number;
   currentNoBuyPrice: number;
   userBalance: number;
+  eventId: string;
 }) {
   const [buyYesPrice, setBuyYesPrice] = useState(0.5);
   const [buyNoPrice, setBuyNoPrice] = useState(0.5);
   const [buyNoQty, setBuyNoQty] = useState(1);
   const [buyYesQty, setBuyYesQty] = useState(1);
-  const [selectedTab, setSelectedTab] = useState("Yes");
+  const [selectedTab, setSelectedTab] = useState<"YES" | "NO">("YES");
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
-    if (selectedTab == "Yes") {
+    if (selectedTab == "YES") {
       setBuyYesPrice(currentYesBuyPrice);
     } else {
       setBuyNoPrice(currentNoBuyPrice);
@@ -42,7 +50,7 @@ export default function OrderPlace({
       }
     } else {
       if (type == "increment") {
-        const selectedPrice = selectedTab == "Yes" ? buyYesPrice : buyNoPrice;
+        const selectedPrice = selectedTab == "YES" ? buyYesPrice : buyNoPrice;
         console.log("price", currentNumber * selectedPrice);
         if (currentNumber * selectedPrice >= userBalance) {
           return "gray";
@@ -58,13 +66,13 @@ export default function OrderPlace({
 
   function increment(category: "quantity" | "price") {
     if (category == "price") {
-      if (selectedTab == "Yes") {
+      if (selectedTab == "YES") {
         setBuyYesPrice((prev) => Math.min(prev + 0.5, 10));
       } else {
         setBuyNoPrice((prev) => Math.min(prev + 0.5, 10));
       }
     } else {
-      if (selectedTab == "Yes") {
+      if (selectedTab == "YES") {
         setBuyYesQty((prev) => {
           const cost = (prev + 1) * buyYesPrice;
           console.log(cost, userBalance);
@@ -82,13 +90,13 @@ export default function OrderPlace({
 
   function decrement(category: "quantity" | "price") {
     if (category == "price") {
-      if (selectedTab == "Yes") {
+      if (selectedTab == "YES") {
         setBuyYesPrice((prev) => Math.max(prev - 0.5, 0.5));
       } else {
         setBuyNoPrice((prev) => Math.max(prev - 0.5, 0.5));
       }
     } else {
-      if (selectedTab == "Yes") {
+      if (selectedTab == "YES") {
         setBuyYesQty((prev) => Math.max(prev - 1, 1));
       } else {
         setBuyNoQty((prev) => Math.max(prev - 1, 1));
@@ -96,15 +104,42 @@ export default function OrderPlace({
     }
   }
 
+  async function handlePlaceOrder() {
+    console.log("place order");
+    setIsLoading(true);
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/v1/event/initiate`,
+        {
+          userId: session?.user.id,
+          eventId: eventId,
+          side: selectedTab,
+          quantity: selectedTab == "YES" ? buyYesQty : buyNoQty,
+          price: selectedTab == "NO" ? buyNoPrice : buyYesPrice,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + session?.user.jwtToken,
+          },
+        }
+      );
+      toast.success("Order Placed Successfully");
+    } catch (err) {
+      console.log(err);
+      toast.error("Error while placing order");
+    }
+    setIsLoading(false);
+  }
+
   return (
     <div className="w-full">
       <div className="flex  rounded-full w-full h-12 border-1 border-neutral-200 select-none">
         <h1
           onClick={() => {
-            setSelectedTab(() => "Yes");
+            setSelectedTab(() => "YES");
           }}
           className={cn(
-            selectedTab == "Yes"
+            selectedTab == "YES"
               ? "bg-blue-500 text-white"
               : "bg-white text-black",
             "rounded-full basis-[50%] text-center text-sm font-semibold flex items-center justify-center cursor-pointer"
@@ -113,10 +148,10 @@ export default function OrderPlace({
         </h1>
         <h1
           onClick={() => {
-            setSelectedTab(() => "No");
+            setSelectedTab(() => "NO");
           }}
           className={cn(
-            selectedTab == "No"
+            selectedTab == "NO"
               ? "bg-red-400 text-white"
               : "bg-white text-black",
             "rounded-full basis-[50%] text-center text-sm font-semibold flex items-center justify-center cursor-pointer"
@@ -128,22 +163,22 @@ export default function OrderPlace({
         {/* Set Price */}
         <div className="flex items-center justify-between">
           <h1 className="text-black text-md font-semibold font-sans">Price</h1>
-          <div className="py-1 px-1 flex justify-between border-2 border-neutral-200 rounded-lg w-[40%]">
+          <div className="py-1 px-1 flex justify-between border-2 border-neutral-200 rounded-lg xl:w-[40%] w-[150px]">
             <SquareMinus
               color={getControllerColor(
                 "decrement",
                 "price",
-                selectedTab == "Yes" ? buyYesPrice : buyNoPrice
+                selectedTab == "YES" ? buyYesPrice : buyNoPrice
               )}
               onClick={() => decrement("price")}
               className="shrink-0 cursor-pointer"
             />
-            <h1>₹{selectedTab == "Yes" ? buyYesPrice : buyNoPrice}</h1>
+            <h1>₹{selectedTab == "YES" ? buyYesPrice : buyNoPrice}</h1>
             <SquarePlus
               color={getControllerColor(
                 "increment",
                 "price",
-                selectedTab == "Yes" ? buyYesPrice : buyNoPrice
+                selectedTab == "YES" ? buyYesPrice : buyNoPrice
               )}
               onClick={() => increment("price")}
               className="shrink-0 cursor-pointer"
@@ -155,22 +190,22 @@ export default function OrderPlace({
           <h1 className="text-black  font-semibold font-sans text-md">
             Quantity
           </h1>
-          <div className="py-1 px-1 flex justify-between border-2 border-neutral-200 rounded-lg w-[40%]">
+          <div className="py-1 px-1 flex justify-between border-2 border-neutral-200 rounded-lg xl:w-[40%] w-[150px]">
             <SquareMinus
               color={getControllerColor(
                 "decrement",
                 "quantity",
-                selectedTab == "Yes" ? buyYesQty : buyNoQty
+                selectedTab == "YES" ? buyYesQty : buyNoQty
               )}
               onClick={() => decrement("quantity")}
               className="shrink-0 cursor-pointer"
             />
-            <h1>{selectedTab == "Yes" ? buyYesQty : buyNoQty}</h1>
+            <h1>{selectedTab == "YES" ? buyYesQty : buyNoQty}</h1>
             <SquarePlus
               color={getControllerColor(
                 "increment",
                 "quantity",
-                selectedTab == "Yes" ? buyYesQty : buyNoQty
+                selectedTab == "YES" ? buyYesQty : buyNoQty
               )}
               onClick={() => increment("quantity")}
               className="shrink-0 cursor-pointer"
@@ -178,11 +213,11 @@ export default function OrderPlace({
           </div>
         </div>
         {/* GOAL */}
-        <div className="flex items-center justify-center gap-12 mt-8">
+        <div className="flex items-center justify-center xl:gap-12 gap-[40%] mt-8">
           <div className="flex flex-col items-center">
             <h1 className="text-black font-semibold text-lg">
               ₹
-              {selectedTab == "Yes"
+              {selectedTab == "YES"
                 ? buyYesQty * buyYesPrice
                 : buyNoQty * buyNoPrice}
             </h1>
@@ -190,19 +225,27 @@ export default function OrderPlace({
           </div>
           <div className="flex flex-col items-center">
             <h1 className="text-green-500 font-semibold text-lg">
-              ₹{selectedTab == "Yes" ? buyYesQty * 10 : buyNoQty * 10}
+              ₹{selectedTab == "YES" ? buyYesQty * 10 : buyNoQty * 10}
             </h1>
             <h1 className="text-neutral-400 text-md font-sans">You get</h1>
           </div>
         </div>
       </div>
-      <div
+      <button
         className={cn(
-          selectedTab == "Yes" ? "bg-blue-500" : "bg-red-400",
-          "flex items-center justify-center text-lg text-white rounded-lg py-3 mt-4 cursor-pointer font-sans"
-        )}>
+          selectedTab == "YES"
+            ? isLoading
+              ? "bg-blue-300"
+              : "bg-blue-500"
+            : isLoading
+              ? "bg-red-300"
+              : "bg-red-400",
+          "w-full flex items-center justify-center text-lg text-white rounded-lg py-3 mt-4 cursor-pointer font-sans"
+        )}
+        onClick={handlePlaceOrder}
+        disabled={isLoading}>
         Place Order
-      </div>
+      </button>
     </div>
   );
 }

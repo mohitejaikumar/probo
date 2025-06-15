@@ -14,18 +14,43 @@ import { Label } from "@/components/ui/label";
 import { signIn, useSession } from "next-auth/react";
 import { toast, Toaster } from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function Login() {
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  async function handleSignIn() {
-    const result = await signIn("google");
+  async function handleGoogleSignIn() {
+    const result = await signIn("google", {
+      redirect: false,
+      callbackUrl: "/events",
+    });
 
     if (result?.error) {
       toast.error("Error signing in, please try again.");
     } else {
       toast.success("Successfully signed in!");
+      router.replace("/");
+    }
+  }
+
+  async function handleCredentialSignIn() {
+    const result = await signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: false,
+      callbackUrl: "/events",
+    });
+
+    if (result?.error) {
+      toast.error("Error signing in, please try again.");
+    } else {
+      toast.success("Successfully signed in!");
+      router.replace("/");
     }
   }
 
@@ -47,6 +72,7 @@ export function Login() {
                 type="email"
                 placeholder="mohitejaikumar@gmail.com"
                 required
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="grid gap-2">
@@ -58,7 +84,12 @@ export function Login() {
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
           </div>
         </form>
@@ -66,14 +97,15 @@ export function Login() {
       <CardFooter className="flex-col gap-2">
         <Button
           type="submit"
-          className="w-full bg-black text-white cursor-pointer">
+          className="w-full bg-black text-white cursor-pointer"
+          onClick={() => handleCredentialSignIn()}>
           {isLoading ? <LoaderCircle className="animate-spin" /> : "Login"}
         </Button>
         <Button
           variant="outline"
           className="w-full bg-white cursor-pointer"
           disabled={isLoading}
-          onClick={() => handleSignIn()}>
+          onClick={() => handleGoogleSignIn()}>
           {isLoading ? (
             <LoaderCircle className="animate-spin" />
           ) : (

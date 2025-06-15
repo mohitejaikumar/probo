@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import eventRouter from "./router/events.js";
 import userRouter from "./router/user.js";
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -16,6 +18,6 @@ app.get("/health", async (req, res) => {
   res.json({ message: "I am healthy!" });
 });
 
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log(`Server listening at 3000`);
 });

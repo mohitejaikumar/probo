@@ -7,13 +7,25 @@ import {
   InMemoryOrders,
   InMemoryTrades,
 } from "../store";
-import { OrderType, Sides } from "@repo/types";
+import { Sides } from "@repo/types";
+import prisma from "@repo/db";
 
 export async function getAllEvents(message: any) {
   const { messageId } = message;
+  const events = Object.keys(InMemoryEvents).map((key) => {
+    return {
+      id: key,
+      title: InMemoryEvents[key]!.title,
+      description: InMemoryEvents[key]!.description,
+      imageURL:
+        "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
+      yesPrice: 5.0,
+      noPrice: 5.0,
+    };
+  });
   const data = JSON.stringify({
     messageId,
-    events: InMemoryEvents,
+    events: events,
     status: "SUCCESS",
   });
   await publisher.publish(`getEvents::${messageId}`, data);
@@ -26,7 +38,14 @@ export async function getEvent(message: any) {
     const data = JSON.stringify({
       messageId,
       status: "SUCCESS",
-      event: InMemoryEvents[eventId],
+      event: {
+        title: InMemoryEvents[eventId].title,
+        description: InMemoryEvents[eventId].description,
+        imageURL:
+          "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
+        yesPrice: 5.0,
+        noPrice: 5.0,
+      },
     });
     await publisher.publish(`getEvent::${messageId}`, data);
   } else {
@@ -39,22 +58,40 @@ export async function getEvent(message: any) {
 }
 
 export async function createEvent(message: any) {
-  const { messageId, title, description } = message;
-  const eventId = createId();
-  const data = JSON.stringify({
-    messageId,
-    eventId,
-    status: "SUCCESS",
-  });
-  InMemoryEvents[eventId] = {
-    title,
-    description,
-  };
-  InMemoryOrderBook[eventId] = {
-    NO: [],
-    YES: [],
-  };
-  await publisher.publish(`eventCreation::${messageId}`, data);
+  const { messageId, title, description, endTime } = message;
+  let event;
+  try {
+    event = await prisma.event.create({
+      data: {
+        title: title,
+        description: description,
+        endTime: new Date(endTime),
+      },
+    });
+
+    const data = JSON.stringify({
+      messageId,
+      eventId: event.id,
+      status: "SUCCESS",
+    });
+    InMemoryEvents[event.id] = {
+      title,
+      description,
+      endTime: new Date(endTime),
+    };
+    InMemoryOrderBook[event.id] = {
+      NO: [],
+      YES: [],
+    };
+    await publisher.publish(`eventCreation::${messageId}`, data);
+  } catch (err) {
+    const data = JSON.stringify({
+      messageId,
+      status: "FAILED",
+    });
+    await publisher.publish(`eventCreation::${messageId}`, data);
+  }
+
   return;
 }
 
@@ -83,6 +120,11 @@ export const initiateOrder = async (message: any) => {
       InMemoryINRBalances[userId]!.balance < price * quantity) ||
     !InMemoryOrderBook[eventId]
   ) {
+    console.log(
+      "Failing: ",
+      InMemoryINRBalances[userId],
+      InMemoryOrderBook[eventId]
+    );
     const data = JSON.stringify({
       messageId,
       status: "FAILED",
@@ -93,8 +135,8 @@ export const initiateOrder = async (message: any) => {
   // Add entry to orders
   const orderId = createId();
   InMemoryOrders[orderId] = {
-    side: side == "yes" ? Sides.YES : Sides.NO,
-    type: OrderType.BUY,
+    side: side,
+    type: "BUY",
     price: price,
     quantity: quantity,
     status: "LIVE",
@@ -155,7 +197,8 @@ export const initiateOrderLogic = async (
   */
 
   // case1 && case2
-  for (let order of sortedOrders) {
+  for (let i = 0; i < sortedOrders.length; i++) {
+    let order = sortedOrders[i]!;
     if (order.price <= price && remainingQty > 0) {
       if (order.quantity > 0) {
         let tradeOty = Math.min(remainingQty, order.quantity);
@@ -169,13 +212,14 @@ export const initiateOrderLogic = async (
             continue;
           }
           const sellerOrderId = sellerOrder.orderId;
-
+          let isPseudoMatch = false;
           // this is case of pseudo case from opposite side
           if (
-            InMemoryOrders[sellerOrderId]?.type == OrderType.SELL &&
+            InMemoryOrders[sellerOrderId]?.type == "SELL" &&
             InMemoryOrders[sellerOrderId]?.status == "LIVE" &&
             sellerOrderId.endsWith("+pseudo")
           ) {
+            isPseudoMatch = true;
             if (sellerTradeOty == sellerOrder.quantity) {
               // mark this as full order completed
               InMemoryOrders[sellerOrderId].status = "EXECUTED";
@@ -190,7 +234,7 @@ export const initiateOrderLogic = async (
           }
           // this is case of sitting sellorders
           if (
-            InMemoryOrders[sellerOrderId]?.type == OrderType.SELL &&
+            InMemoryOrders[sellerOrderId]?.type == "SELL" &&
             InMemoryOrders[sellerOrderId]?.status == "LIVE" &&
             !sellerOrderId.endsWith("+pseudo")
           ) {
@@ -219,7 +263,11 @@ export const initiateOrderLogic = async (
             sellPrice: order.price,
             sellQuantity: sellerTradeOty,
           };
-          await BroadcastChannel("trade", InMemoryTrades[tradeId]);
+          await BroadcastChannel("trade", {
+            ...InMemoryTrades[tradeId],
+            item: side,
+            isPseudoMatch,
+          });
           console.log(
             `Date: ${new Date().toLocaleDateString()} InMemoryTrades: ${InMemoryTrades[tradeId]}`
           );
@@ -243,6 +291,10 @@ export const initiateOrderLogic = async (
           }
         }
       }
+      if (order.quantity == 0) {
+        sortedOrders.splice(i, 1);
+        i--;
+      }
     }
   }
 
@@ -251,12 +303,13 @@ export const initiateOrderLogic = async (
     const orderWithMyOppPrice = orderbook[oppType].find(
       (order) => order.price === 10 - price
     );
+    const pseudoOrderId = orderId + "+pseudo";
 
     if (orderWithMyOppPrice != undefined) {
       orderWithMyOppPrice.quantity += remainingQty;
       orderWithMyOppPrice.userOrders.push({
         userId,
-        orderId,
+        orderId: pseudoOrderId,
         quantity: remainingQty,
       });
     } else {
@@ -266,17 +319,16 @@ export const initiateOrderLogic = async (
         userOrders: [
           {
             userId,
-            orderId,
+            orderId: pseudoOrderId,
             quantity: remainingQty,
           },
         ],
       });
     }
-    const pseudoOrderId = orderId + "+pseudo";
+    console.log("created pseudo order", pseudoOrderId);
     InMemoryOrders[pseudoOrderId] = InMemoryOrders[orderId]!;
-    InMemoryOrders[pseudoOrderId]!.type = OrderType.SELL;
-    InMemoryOrders[pseudoOrderId]!.side =
-      getOppSideString(side) == "NO" ? Sides.NO : Sides.YES;
+    InMemoryOrders[pseudoOrderId]!.type = "SELL";
+    InMemoryOrders[pseudoOrderId]!.side = getOppSideString(side);
     InMemoryOrders[pseudoOrderId].quantity = remainingQty;
     // PURE BALANCE WITH SELLTYPE
     InMemoryOrders[orderId]!.quantity -= remainingQty;
@@ -288,8 +340,8 @@ export const initiateOrderLogic = async (
   const broadcastOrderBook = {
     eventId,
     orderbook: {
-      yes: orderbook.YES,
-      no: orderbook.NO,
+      YES: orderbook.YES,
+      NO: orderbook.NO,
     },
   };
   await BroadcastChannel("orderbook", broadcastOrderBook);
@@ -338,9 +390,10 @@ export async function exit(
   let orderbook = InMemoryOrderBook[eventId]!;
   const oppSide = getOppSideString(side);
   let remainingQty = quantity;
-
+  let oppOrders = orderbook[oppSide];
   // case1 (match with oppSide seller except pseudo sellers)
-  orderbook[oppSide].forEach(async (order) => {
+  for (let i = 0; i < oppOrders.length; i++) {
+    let order = oppOrders[i]!;
     if (order.price === sellprice && remainingQty > 0) {
       let tradeQty = Math.min(remainingQty, order.quantity);
       for (let i = 0; i < order.userOrders.length; i++) {
@@ -370,7 +423,10 @@ export async function exit(
             sellPrice: price,
             sellQuantity: sellerQuantity,
           };
-          await BroadcastChannel("trade", InMemoryTrades[tradeId]);
+          // await BroadcastChannel("trade", {
+          //   ...InMemoryTrades[tradeId],
+          //   item: side,
+          // });
 
           // Balances
           sellerOrder.quantity -= sellerQuantity;
@@ -384,7 +440,11 @@ export async function exit(
         }
       }
     }
-  });
+    if (order.quantity == 0) {
+      oppOrders.splice(i, 1);
+      i--;
+    }
+  }
   InMemoryINRBalances[userId]!.balance += (quantity - remainingQty) * price;
   if (remainingQty == 0) {
     const orderExit = {
@@ -428,8 +488,8 @@ export async function exit(
   const broadcastData = {
     eventId,
     orderbook: {
-      yes: orderbook.YES,
-      no: orderbook.NO,
+      Yes: orderbook.YES,
+      No: orderbook.NO,
     },
   };
   await BroadcastChannel("orderbook", broadcastData);

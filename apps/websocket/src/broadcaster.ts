@@ -1,5 +1,5 @@
 import WebSocket, { WebSocketServer } from "ws";
-import { InMemoryOrderBook } from "./store";
+import { InMemoryOrderBook, InMemoryTrades } from "./store";
 
 export class BroadCaster {
   static clients: {
@@ -14,7 +14,9 @@ export class BroadCaster {
     });
 
     wss.on("connection", (ws: WebSocket) => {
-      ws.on("message", async (message: string) => {
+      ws.on("message", async (data: WebSocket.RawData) => {
+        const message = data.toString();
+        console.log("Connecting message", message);
         const parseMessage = JSON.parse(message);
         const eventId = parseMessage.eventId;
         if (eventId) {
@@ -26,11 +28,23 @@ export class BroadCaster {
           if (!isClientExists) {
             BroadCaster.clients.push({ ws, eventId: eventId });
           }
-          if (!InMemoryOrderBook[eventId]) {
-            ws.send(JSON.stringify(InMemoryOrderBook[eventId]));
-          } else {
-            ws.send("null");
+          if (InMemoryOrderBook[eventId]) {
+            ws.send(
+              JSON.stringify({
+                type: "orderbook",
+                data: JSON.stringify({
+                  eventId: eventId,
+                  orderbook: InMemoryOrderBook[eventId],
+                }),
+              })
+            );
           }
+          ws.send(
+            JSON.stringify({
+              type: "recentTrade",
+              data: InMemoryTrades.slice(0, 6),
+            })
+          );
         }
       });
 
@@ -39,6 +53,12 @@ export class BroadCaster {
           (client) => client.ws !== ws
         );
         console.log("Client disconnected.");
+      });
+      ws.on("error", () => {
+        BroadCaster.clients = BroadCaster.clients.filter(
+          (client) => client.ws !== ws
+        );
+        console.log("Client error - disconnected.");
       });
     });
   }

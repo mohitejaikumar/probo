@@ -1,10 +1,11 @@
 "use client";
 
 import { useBalance } from "../hooks/use-balance";
-import { BriefcaseBusiness, House, Wallet } from "lucide-react";
+import { BookPlus, BriefcaseBusiness, House, Wallet } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
 interface NavItem {
   title: string;
@@ -15,11 +16,12 @@ interface NavItem {
 export const Profile = () => {
   const { balance, loading, error } = useBalance();
   const { data } = useSession();
+  const router = useRouter();
 
   const menuItems: NavItem[] = [
     {
       title: "Home",
-      link: "/home",
+      link: "/",
       svg: <House size={20} className="text-neutral-600" />,
     },
     {
@@ -27,7 +29,13 @@ export const Profile = () => {
       link: "/portfolio",
       svg: <BriefcaseBusiness size={20} className="text-neutral-600" />,
     },
+    {
+      title: "Event+",
+      link: "/create-event",
+      svg: <BookPlus size={20} className="text-neutral-600" />,
+    },
   ];
+
   return (
     <div className="flex gap-6 items-center">
       {data?.user && (
@@ -49,11 +57,25 @@ export const Profile = () => {
         </>
       )}
       <div className="flex items-center gap-4">
+        {
+          <Button
+            onClick={() => router.push("/events")}
+            className="cursor-pointer justify-center flex items-center whitespace-nowrap transition duration-200 ease-in-out font-medium rounded px-7 py-2 text-sm pr-5 pl-5 border-neutral-300 border-1">
+            Trade
+          </Button>
+        }
         {data?.user && (
           <Button
             onClick={() => signOut()}
-            className="justify-center flex items-center whitespace-nowrap transition duration-200 ease-in-out font-medium rounded px-7 py-2 text-sm pr-5 pl-5 border-neutral-300 border-1">
+            className="cursor-pointer justify-center flex items-center whitespace-nowrap transition duration-200 ease-in-out font-medium rounded px-7 py-2 text-sm pr-5 pl-5 border-neutral-300 border-1">
             Sign Out
+          </Button>
+        )}
+        {!data?.user && (
+          <Button
+            onClick={() => router.push("/auth/signin")}
+            className="cursor-pointer justify-center flex items-center whitespace-nowrap transition duration-200 ease-in-out font-medium rounded px-7 py-2 text-sm pr-5 pl-5 border-neutral-300 border-1">
+            Sign In
           </Button>
         )}
       </div>
@@ -63,10 +85,7 @@ export const Profile = () => {
 
 export const NavBar = ({ title, link, svg }: NavItem) => {
   return (
-    <Link
-      onClick={() => {}}
-      className=" text-xl flex items-center flex-col "
-      href={link}>
+    <Link className=" text-xl flex items-center flex-col " href={link}>
       {svg}
       <h1 className=" text-sm">{title}</h1>
     </Link>

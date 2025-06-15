@@ -7,3 +7,70 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id          String  @id @default(cuid())
+  email       String  @unique
+  password    String
+  provider    String
+  balance     Float
+  orders      Order[]
+  boughtTrade Trade[] @relation("BuyerRelation")
+  sellTrade   Trade[] @relation("SellerRelation")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  endTime     DateTime
+  orders      Order[]
+  trades      Trade[]
+}
+
+model Order {
+  id       String      @id @default(cuid())
+  userId   String
+  eventId  String
+  user     User        @relation(fields: [userId], references: [id])
+  event    Event       @relation(fields: [eventId], references: [id])
+  quantity Int
+  side     TradeSide
+  type     OrderType
+  price    Float
+  status   OrderStatus
+}
+
+model Trade {
+  id            String   @id @default(cuid())
+  eventId       String
+  buyerId       String
+  sellerId      String
+  event         Event    @relation(fields: [eventId], references: [id])
+  buyerUser     User     @relation("BuyerRelation", fields: [buyerId], references: [id])
+  sellerUser    User     @relation("SellerRelation", fields: [sellerId], references: [id])
+  sellQty       Int
+  buyQty        Int
+  buyPrice      Float
+  sellPrice     Float
+  buyerOrderId  String
+  sellerOrderId String
+  createdAt     DateTime @default(now())
+}
+
+enum TradeSide {
+  YES
+  NO
+}
+
+enum OrderType {
+  BUY
+  SELL
+}
+
+enum OrderStatus {
+  LIVE
+  EXECUTED
+  MATCHED
+}

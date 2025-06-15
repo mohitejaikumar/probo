@@ -10,15 +10,16 @@ export const useBalance = (): {
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const userId = session?.user?.id;
 
   useEffect(() => {
     async function getBalance() {
       try {
+        setLoading(true);
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND}/v1/user/balance/${userId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_API}/v1/user/balance/${userId}`
         );
 
         if (response.status == 200) {

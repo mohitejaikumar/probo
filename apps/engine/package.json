@@ -1,7 +1,7 @@
 {
   "name": "engine",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "esbuild src/index.ts --platform=node --bundle --outdir=dist",
     "start": "npm run build && node dist/index.js"
@@ -12,7 +12,9 @@
   "description": "",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
+    "@repo/db": "*",
     "@repo/types": "*",
+    "@repo/typescript-config": "*",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "cors": "^2.8.5",
