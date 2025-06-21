@@ -7,6 +7,7 @@ export interface UserOrders {
   quantity: number;
   userId: string;
   orderId: string;
+  timestamp: Date;
 }
 
 export interface Order {
@@ -29,6 +30,7 @@ export interface OrderInterface {
   status: string;
   price: number;
   quantity: number;
+  timestamp: Date;
 }
 
 export interface Event {
@@ -48,6 +50,7 @@ export interface Trades {
   buyPrice: number;
   sellOrderId: string;
   buyOrderId: string;
+  timestamp: Date;
 }
 
 export enum Sides {

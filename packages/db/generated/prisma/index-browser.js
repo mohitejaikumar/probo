@@ -145,7 +145,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   side: 'side',
   type: 'type',
   price: 'price',
-  status: 'status'
+  status: 'status',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.TradeScalarFieldEnum = {

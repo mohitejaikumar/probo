@@ -9,14 +9,15 @@ datasource db {
 }
 
 model User {
-  id          String  @id @default(cuid())
-  email       String  @unique
-  password    String
-  provider    String
-  balance     Float
-  orders      Order[]
-  boughtTrade Trade[] @relation("BuyerRelation")
-  sellTrade   Trade[] @relation("SellerRelation")
+  id            String  @id @default(cuid())
+  email         String  @unique
+  password      String
+  provider      String
+  balance       Float
+  lockedBalance Float
+  orders        Order[]
+  boughtTrade   Trade[] @relation("BuyerRelation")
+  sellTrade     Trade[] @relation("SellerRelation")
 }
 
 model Event {
@@ -30,16 +31,17 @@ model Event {
 }
 
 model Order {
-  id       String      @id @default(cuid())
-  userId   String
-  eventId  String
-  user     User        @relation(fields: [userId], references: [id])
-  event    Event       @relation(fields: [eventId], references: [id])
-  quantity Int
-  side     TradeSide
-  type     OrderType
-  price    Float
-  status   OrderStatus
+  id        String      @id @default(cuid())
+  userId    String
+  eventId   String
+  user      User        @relation(fields: [userId], references: [id])
+  event     Event       @relation(fields: [eventId], references: [id])
+  quantity  Int
+  side      TradeSide
+  type      OrderType
+  price     Float
+  status    OrderStatus
+  createdAt DateTime    @default(now())
 }
 
 model Trade {

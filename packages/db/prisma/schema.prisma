@@ -31,16 +31,17 @@ model Event {
 }
 
 model Order {
-  id       String      @id @default(cuid())
-  userId   String
-  eventId  String
-  user     User        @relation(fields: [userId], references: [id])
-  event    Event       @relation(fields: [eventId], references: [id])
-  quantity Int
-  side     TradeSide
-  type     OrderType
-  price    Float
-  status   OrderStatus
+  id        String      @id @default(cuid())
+  userId    String
+  eventId   String
+  user      User        @relation(fields: [userId], references: [id])
+  event     Event       @relation(fields: [eventId], references: [id])
+  quantity  Int
+  side      TradeSide
+  type      OrderType
+  price     Float
+  status    OrderStatus
+  createdAt DateTime    @default(now())
 }
 
 model Trade {

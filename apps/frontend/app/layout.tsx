@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SessionProviders } from "./_provider";
 import Appbar from "@/components/Appbar";
+import Script from "next/script";
+import { PriceProvider } from "@/contexts/PriceContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,10 +32,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProviders>
-          <Appbar />
-          {children}
+          <PriceProvider>
+            <Appbar />
+            {children}
+          </PriceProvider>
         </SessionProviders>
       </body>
+      <Script src="https://sdk.cashfree.com/js/v3/cashfree.js" />
     </html>
   );
 }

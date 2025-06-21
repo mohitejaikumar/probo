@@ -5,20 +5,18 @@ import { SquareMinus, SquarePlus } from "lucide-react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { usePrice } from "@/contexts/PriceContext";
 
 export default function OrderPlace({
-  currentYesBuyPrice,
-  currentNoBuyPrice,
   userBalance,
   eventId,
 }: {
-  currentYesBuyPrice: number;
-  currentNoBuyPrice: number;
   userBalance: number;
   eventId: string;
 }) {
-  const [buyYesPrice, setBuyYesPrice] = useState(0.5);
-  const [buyNoPrice, setBuyNoPrice] = useState(0.5);
+  const { yesPrice, noPrice } = usePrice();
+  const [buyYesPrice, setBuyYesPrice] = useState(yesPrice);
+  const [buyNoPrice, setBuyNoPrice] = useState(noPrice);
   const [buyNoQty, setBuyNoQty] = useState(1);
   const [buyYesQty, setBuyYesQty] = useState(1);
   const [selectedTab, setSelectedTab] = useState<"YES" | "NO">("YES");
@@ -27,11 +25,11 @@ export default function OrderPlace({
 
   useEffect(() => {
     if (selectedTab == "YES") {
-      setBuyYesPrice(currentYesBuyPrice);
+      setBuyYesPrice(yesPrice);
     } else {
-      setBuyNoPrice(currentNoBuyPrice);
+      setBuyNoPrice(noPrice);
     }
-  }, [selectedTab]);
+  }, [selectedTab, yesPrice, noPrice]);
 
   function getControllerColor(
     type: "increment" | "decrement",

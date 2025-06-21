@@ -6,6 +6,10 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+// @ts-ignore
+import { load } from "@cashfreepayments/cashfree-js";
+import { createOrder } from "@/actions/order";
 
 interface NavItem {
   title: string;
@@ -17,6 +21,15 @@ export const Profile = () => {
   const { balance, loading, error } = useBalance();
   const { data } = useSession();
   const router = useRouter();
+  const [cashfree, setCashfree] = useState();
+  useEffect(() => {
+    (async () => {
+      let cashfree_sdk = await load({
+        mode: "production",
+      });
+      setCashfree(cashfree_sdk);
+    })();
+  }, []);
 
   const menuItems: NavItem[] = [
     {
@@ -36,6 +49,24 @@ export const Profile = () => {
     },
   ];
 
+  async function handleRecharge() {
+    try {
+      if (cashfree) {
+        const response = await createOrder(5, data!.user.id);
+        console.log(response);
+        // @ts-ignore
+        cashfree.checkout({
+          paymentSessionId: response,
+          redirectTarget: "_self",
+        });
+      } else {
+        console.log("cashfree not loaded!");
+      }
+    } catch (err) {
+      console.log("error: from button click", err);
+    }
+  }
+
   return (
     <div className="flex gap-6 items-center">
       {data?.user && (
@@ -50,7 +81,9 @@ export const Profile = () => {
               />
             ))}
           </nav>
-          <button className=" text-black border-neutral-200 border-1 rounded px-4  py-2 flex items-center space-x-6">
+          <button
+            onClick={handleRecharge}
+            className=" text-black border-neutral-200 border-1 rounded px-4  py-2 flex items-center space-x-6 cursor-pointer">
             <Wallet className="h-3 w-3 " />
             <span className="font-mono text-sm">₹{balance}</span>
           </button>

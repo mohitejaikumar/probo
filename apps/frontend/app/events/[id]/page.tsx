@@ -28,9 +28,9 @@ export default async function Page({
   const event = response.data.event;
 
   return (
-    <div className="w-screen min-h-screen bg-[#F3F3F3] pt-[60px] overflow-x-hidden">
-      <div className="md:max-w-[90vw] overflow-hidden  2xl:max-w-[1200px] mx-auto  py-1 flex gap-2 flex-col xl:flex-row px-4 md:px-0">
-        <div className="basis-[70%]">
+    <div className="w-full min-h-screen bg-[#F3F3F3] pt-[60px] overflow-x-hidden pb-[10vh]">
+      <div className="max-w-[90vw] overflow-x-hidden 2xl:max-w-[1200px] mx-auto py-1 flex gap-2 flex-col xl:flex-row px-4 md:px-0">
+        <div className="basis-[70%] overflow-x-hidden">
           <div className="flex items-center gap-10 mt-[5vh] flex-col md:flex-row">
             <div className="w-[100px] h-[100px] z-10 rounded-lg relative shrink-0 bg-[#F3F3F3]">
               <Image
@@ -46,7 +46,7 @@ export default async function Page({
               {event.description}
             </p>
           </div>
-          <div className="mt-12 ">
+          <div className="mt-12">
             <span className="border-b-2 border-black text-neutral-700 px-3 pb-2 text-lg">
               Orderbook
             </span>
@@ -55,12 +55,7 @@ export default async function Page({
           <OrderBook eventId={String(eventId)} />
         </div>
         <div className="bg-white flex-1 xl:max-w-[400px] overflow-x-hidden mt-10 rounded-xl border-1 border-neutral-200 h-fit p-4">
-          <OrderPlace
-            currentNoBuyPrice={4}
-            currentYesBuyPrice={6}
-            userBalance={100000}
-            eventId={String(eventId)}
-          />
+          <OrderPlace userBalance={100000} eventId={String(eventId)} />
         </div>
       </div>
     </div>

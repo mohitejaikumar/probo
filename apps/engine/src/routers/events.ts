@@ -143,6 +143,7 @@ export const initiateOrder = async (message: any) => {
     userId: userId,
     eventId: eventId,
     orderId: orderId,
+    timestamp: new Date(),
   };
 
   // BroadCast this event
@@ -262,6 +263,7 @@ export const initiateOrderLogic = async (
             sellOrderId: sellerOrderId,
             sellPrice: order.price,
             sellQuantity: sellerTradeOty,
+            timestamp: new Date(),
           };
           await BroadcastChannel("trade", {
             ...InMemoryTrades[tradeId],
@@ -311,6 +313,7 @@ export const initiateOrderLogic = async (
         userId,
         orderId: pseudoOrderId,
         quantity: remainingQty,
+        timestamp: new Date(),
       });
     } else {
       orderbook[oppType].push({
@@ -321,6 +324,7 @@ export const initiateOrderLogic = async (
             userId,
             orderId: pseudoOrderId,
             quantity: remainingQty,
+            timestamp: new Date(),
           },
         ],
       });
@@ -422,6 +426,7 @@ export async function exit(
             sellOrderId: orderId,
             sellPrice: price,
             sellQuantity: sellerQuantity,
+            timestamp: new Date(),
           };
           // await BroadcastChannel("trade", {
           //   ...InMemoryTrades[tradeId],
@@ -469,6 +474,7 @@ export async function exit(
             orderId,
             quantity: remainingQty,
             userId,
+            timestamp: new Date(),
           },
         ],
       });
@@ -480,6 +486,7 @@ export async function exit(
             orderId,
             quantity: remainingQty,
             userId,
+            timestamp: new Date(),
           });
         }
       });

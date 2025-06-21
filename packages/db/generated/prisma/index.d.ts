@@ -3578,6 +3578,7 @@ export namespace Prisma {
     type: $Enums.OrderType | null
     price: number | null
     status: $Enums.OrderStatus | null
+    createdAt: Date | null
   }
 
   export type OrderMaxAggregateOutputType = {
@@ -3589,6 +3590,7 @@ export namespace Prisma {
     type: $Enums.OrderType | null
     price: number | null
     status: $Enums.OrderStatus | null
+    createdAt: Date | null
   }
 
   export type OrderCountAggregateOutputType = {
@@ -3600,6 +3602,7 @@ export namespace Prisma {
     type: number
     price: number
     status: number
+    createdAt: number
     _all: number
   }
 
@@ -3623,6 +3626,7 @@ export namespace Prisma {
     type?: true
     price?: true
     status?: true
+    createdAt?: true
   }
 
   export type OrderMaxAggregateInputType = {
@@ -3634,6 +3638,7 @@ export namespace Prisma {
     type?: true
     price?: true
     status?: true
+    createdAt?: true
   }
 
   export type OrderCountAggregateInputType = {
@@ -3645,6 +3650,7 @@ export namespace Prisma {
     type?: true
     price?: true
     status?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -3743,6 +3749,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt: Date
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -3773,6 +3780,7 @@ export namespace Prisma {
     type?: boolean
     price?: boolean
     status?: boolean
+    createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -3786,6 +3794,7 @@ export namespace Prisma {
     type?: boolean
     price?: boolean
     status?: boolean
+    createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -3799,6 +3808,7 @@ export namespace Prisma {
     type?: boolean
     price?: boolean
     status?: boolean
+    createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -3812,9 +3822,10 @@ export namespace Prisma {
     type?: boolean
     price?: boolean
     status?: boolean
+    createdAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "eventId" | "quantity" | "side" | "type" | "price" | "status", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "eventId" | "quantity" | "side" | "type" | "price" | "status" | "createdAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
@@ -3843,6 +3854,7 @@ export namespace Prisma {
       type: $Enums.OrderType
       price: number
       status: $Enums.OrderStatus
+      createdAt: Date
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -4276,6 +4288,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Order", 'OrderType'>
     readonly price: FieldRef<"Order", 'Float'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
+    readonly createdAt: FieldRef<"Order", 'DateTime'>
   }
     
 
@@ -5933,7 +5946,8 @@ export namespace Prisma {
     side: 'side',
     type: 'type',
     price: 'price',
-    status: 'status'
+    status: 'status',
+    createdAt: 'createdAt'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -6216,6 +6230,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     price?: FloatFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    createdAt?: DateTimeFilter<"Order"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
   }
@@ -6229,6 +6244,7 @@ export namespace Prisma {
     type?: SortOrder
     price?: SortOrder
     status?: SortOrder
+    createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     event?: EventOrderByWithRelationInput
   }
@@ -6245,6 +6261,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     price?: FloatFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    createdAt?: DateTimeFilter<"Order"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
   }, "id">
@@ -6258,6 +6275,7 @@ export namespace Prisma {
     type?: SortOrder
     price?: SortOrder
     status?: SortOrder
+    createdAt?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -6277,6 +6295,7 @@ export namespace Prisma {
     type?: EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
     price?: FloatWithAggregatesFilter<"Order"> | number
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
+    createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
   }
 
   export type TradeWhereInput = {
@@ -6518,6 +6537,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
     event: EventCreateNestedOneWithoutOrdersInput
   }
@@ -6531,6 +6551,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
   }
 
   export type OrderUpdateInput = {
@@ -6540,6 +6561,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     event?: EventUpdateOneRequiredWithoutOrdersNestedInput
   }
@@ -6553,6 +6575,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderCreateManyInput = {
@@ -6564,6 +6587,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
   }
 
   export type OrderUpdateManyMutationInput = {
@@ -6573,6 +6597,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderUncheckedUpdateManyInput = {
@@ -6584,6 +6609,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TradeCreateInput = {
@@ -6898,6 +6924,7 @@ export namespace Prisma {
     type?: SortOrder
     price?: SortOrder
     status?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
@@ -6914,6 +6941,7 @@ export namespace Prisma {
     type?: SortOrder
     price?: SortOrder
     status?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
@@ -6925,6 +6953,7 @@ export namespace Prisma {
     type?: SortOrder
     price?: SortOrder
     status?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
@@ -7518,6 +7547,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
     event: EventCreateNestedOneWithoutOrdersInput
   }
 
@@ -7529,6 +7559,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
   }
 
   export type OrderCreateOrConnectWithoutUserInput = {
@@ -7641,6 +7672,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     price?: FloatFilter<"Order"> | number
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
+    createdAt?: DateTimeFilter<"Order"> | Date | string
   }
 
   export type TradeUpsertWithWhereUniqueWithoutBuyerUserInput = {
@@ -7699,6 +7731,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
   }
 
@@ -7710,6 +7743,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
   }
 
   export type OrderCreateOrConnectWithoutEventInput = {
@@ -8082,6 +8116,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
   }
 
   export type TradeCreateManyBuyerUserInput = {
@@ -8117,6 +8152,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: EventUpdateOneRequiredWithoutOrdersNestedInput
   }
 
@@ -8128,6 +8164,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderUncheckedUpdateManyWithoutUserInput = {
@@ -8138,6 +8175,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TradeUpdateWithoutBuyerUserInput = {
@@ -8226,6 +8264,7 @@ export namespace Prisma {
     type: $Enums.OrderType
     price: number
     status: $Enums.OrderStatus
+    createdAt?: Date | string
   }
 
   export type TradeCreateManyEventInput = {
@@ -8248,6 +8287,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
   }
 
@@ -8259,6 +8299,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderUncheckedUpdateManyWithoutEventInput = {
@@ -8269,6 +8310,7 @@ export namespace Prisma {
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TradeUpdateWithoutEventInput = {

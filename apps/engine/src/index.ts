@@ -145,6 +145,7 @@ async function getAllData() {
         sellPrice: item.sellPrice,
         sellQuantity: item.sellQty,
         tradeId: item.id,
+        timestamp: item.createdAt,
       };
     });
     user.boughtTrade.map((item) => {
@@ -159,6 +160,7 @@ async function getAllData() {
         sellPrice: item.sellPrice,
         sellQuantity: item.sellQty,
         tradeId: item.id,
+        timestamp: item.createdAt,
       };
     });
     user.orders.map((item) => {
@@ -171,6 +173,7 @@ async function getAllData() {
         status: item.status,
         type: item.type,
         userId: item.userId,
+        timestamp: item.createdAt,
       };
     });
     user.orders.map((item) => {
@@ -193,6 +196,7 @@ async function getAllData() {
               orderId: item.id,
               quantity: item.quantity,
               userId: item.userId,
+              timestamp: item.createdAt,
             });
           }
         }
@@ -206,6 +210,7 @@ async function getAllData() {
               orderId: item.id,
               quantity: item.quantity,
               userId: item.userId,
+              timestamp: item.createdAt,
             },
           ],
         });
