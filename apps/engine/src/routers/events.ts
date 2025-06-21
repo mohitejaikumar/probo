@@ -10,17 +10,37 @@ import {
 import { Sides } from "@repo/types";
 import prisma from "@repo/db";
 
+function getPrices(yesQty: number, noQty: number, b: number) {
+  const expYES = Math.exp(yesQty / b);
+  const expNO = Math.exp(noQty / b);
+  const priceYES = expYES / (expYES + expNO);
+  const priceNO = expNO / (expYES + expNO);
+  return {
+    YES: Math.round(priceNO * 10 * 2) / 2,
+    NO: Math.round(priceYES * 10 * 2) / 2,
+  };
+}
+
 export async function getAllEvents(message: any) {
   const { messageId } = message;
   const events = Object.keys(InMemoryEvents).map((key) => {
+    const totalYesQuantity = InMemoryOrderBook[key]!.YES.reduce((acc, item) => {
+      return item.quantity + acc;
+    }, 0);
+    // @ts-ignore
+    const totalNoQuantity = InMemoryOrderBook[key]!.NO.reduce((acc, item) => {
+      return item.quantity + acc;
+    }, 0);
+
+    const { YES, NO } = getPrices(totalYesQuantity, totalNoQuantity, 1);
     return {
       id: key,
       title: InMemoryEvents[key]!.title,
       description: InMemoryEvents[key]!.description,
       imageURL:
         "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
-      yesPrice: 5.0,
-      noPrice: 5.0,
+      yesPrice: YES,
+      noPrice: NO,
     };
   });
   const data = JSON.stringify({

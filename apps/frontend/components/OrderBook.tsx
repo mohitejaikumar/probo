@@ -59,7 +59,7 @@ export default function OrderBook({ eventId }: { eventId: string }) {
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const { setLMSRPrices } = usePrice();
 
-  function getPrices(yesQty: number, noQty: number, b: number) {
+  function getProbability(yesQty: number, noQty: number, b: number) {
     const expYES = Math.exp(yesQty / b);
     const expNO = Math.exp(noQty / b);
     const priceYES = expYES / (expYES + expNO);
@@ -212,7 +212,7 @@ export default function OrderBook({ eventId }: { eventId: string }) {
 
               const totalQty = cumulativeYesQty + cumulativeNoQty;
               if (totalQty > 0) {
-                const { YES, NO } = getPrices(
+                const { YES, NO } = getProbability(
                   cumulativeYesQty,
                   cumulativeNoQty,
                   1

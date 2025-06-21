@@ -15,55 +15,6 @@ interface EventDescription {
 export default async function Events() {
   const currentTab = "All events";
   const availableTabs = ["All events", "Cricket"];
-  const events = [
-    {
-      id: "1",
-      imageURL:
-        "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
-      title: "Football",
-      description: "Jannik Sinner to win the match against C. Alcaraz?",
-      yesPrice: 1.5,
-      noPrice: 8.5,
-    },
-    {
-      id: "2",
-      imageURL:
-        "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
-      title: "Blockchain",
-      description:
-        "Bitcoin is forecasted to reach at 106195.21 USDT or more at 11:40 PM?",
-      yesPrice: 1.5,
-      noPrice: 8.5,
-    },
-    {
-      id: "3",
-      imageURL:
-        "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
-      title: "Jannik Sinner to win the match against C. Alcaraz?",
-      description: "Live Score(Sets won): J Sinner-0 | C Alcaraz-0",
-      yesPrice: 1.5,
-      noPrice: 8.5,
-    },
-    {
-      id: "4",
-      imageURL:
-        "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
-      title: "Football",
-      description: "Spain to win against Portugal?",
-      yesPrice: 1.5,
-      noPrice: 8.5,
-    },
-    {
-      id: "5",
-      imageURL:
-        "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
-      title: "Youtuber",
-      description:
-        "Sourav Joshi-My New Room Editing Table' video to cross 2.82M views at 12:00 AM?",
-      yesPrice: 1.5,
-      noPrice: 8.5,
-    },
-  ];
 
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_API}/v1/event/`
