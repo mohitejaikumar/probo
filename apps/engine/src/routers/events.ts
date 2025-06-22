@@ -168,6 +168,7 @@ export const initiateOrder = async (message: any) => {
 
   // BroadCast this event
   console.log(InMemoryOrders[orderId]);
+  await BroadcastChannel("order_creation", InMemoryOrders[orderId]);
 
   // do core logic of order initiation
   await initiateOrderLogic(userId, eventId, side, price, quantity, orderId);
@@ -248,8 +249,8 @@ export const initiateOrderLogic = async (
             // broadcast this message
             const update = {
               id: sellerOrderId,
-              eventId: eventId,
               type: "SELL",
+              status: InMemoryOrders[sellerOrderId].status,
             };
             await BroadcastChannel("order_update", update);
           }
@@ -265,8 +266,8 @@ export const initiateOrderLogic = async (
             }
             const update = {
               id: sellerOrderId,
-              eventId,
               type: "BUY",
+              status: InMemoryOrders[sellerOrderId].status,
             };
             await BroadcastChannel("order_update", update);
           }
@@ -309,6 +310,11 @@ export const initiateOrderLogic = async (
           // remove the order if it is finished
           if (sellerOrder.quantity == 0) {
             InMemoryOrders[sellerOrderId]!.status = "EXECUTED";
+            const data = {
+              id: sellerOrderId,
+              status: "EXECUTED",
+            };
+            await BroadcastChannel("order_executed", data);
             order.userOrders.shift();
           }
         }
@@ -357,8 +363,20 @@ export const initiateOrderLogic = async (
     // PURE BALANCE WITH SELLTYPE
     InMemoryOrders[orderId]!.quantity -= remainingQty;
     remainingQty = 0;
+    const data = {
+      orderId: orderId,
+      pseudoOrderId: pseudoOrderId,
+      side: getOppSideString(side),
+      remainingQty: remainingQty,
+    };
+    await BroadcastChannel("pseudo_order_creation", data);
   } else {
     InMemoryOrders[orderId]!.status = "MATCHED";
+    const data = {
+      id: orderId,
+      status: "MATCHED",
+    };
+    await BroadcastChannel("order_matched", data);
   }
 
   const broadcastOrderBook = {
@@ -448,10 +466,10 @@ export async function exit(
             sellQuantity: sellerQuantity,
             timestamp: new Date(),
           };
-          // await BroadcastChannel("trade", {
-          //   ...InMemoryTrades[tradeId],
-          //   item: side,
-          // });
+          await BroadcastChannel("exit_trade", {
+            ...InMemoryTrades[tradeId],
+            item: side,
+          });
 
           // Balances
           sellerOrder.quantity -= sellerQuantity;
@@ -459,6 +477,11 @@ export async function exit(
           tradeQty -= sellerQuantity;
           if (sellerOrder.quantity == 0) {
             InMemoryOrders[sellerOrderId]!.status = "EXECUTED";
+            const data = {
+              id: sellerOrderId,
+              status: "EXECUTED",
+            };
+            await BroadcastChannel("order_executed", data);
             order.userOrders.splice(i, 1);
             i--;
           }
@@ -474,10 +497,9 @@ export async function exit(
   if (remainingQty == 0) {
     const orderExit = {
       id: orderId,
-      eventId,
       status: "EXECUTED",
     };
-    await BroadcastChannel("order_exit", orderExit);
+    await BroadcastChannel("order_executed", orderExit);
     console.log(InMemoryOrders[orderId]);
   }
   if (remainingQty > 0) {
