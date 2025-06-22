@@ -136,7 +136,9 @@ exports.Prisma.EventScalarFieldEnum = {
   createdAt: 'createdAt',
   endTime: 'endTime',
   noPrice: 'noPrice',
-  yesPrice: 'yesPrice'
+  yesPrice: 'yesPrice',
+  winner: 'winner',
+  payoutDone: 'payoutDone'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -164,6 +166,14 @@ exports.Prisma.TradeScalarFieldEnum = {
   buyerOrderId: 'buyerOrderId',
   sellerOrderId: 'sellerOrderId',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.StockBalanceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  eventId: 'eventId',
+  yesQty: 'yesQty',
+  noQty: 'noQty'
 };
 
 exports.Prisma.SortOrder = {
@@ -195,7 +205,8 @@ exports.Prisma.ModelName = {
   User: 'User',
   Event: 'Event',
   Order: 'Order',
-  Trade: 'Trade'
+  Trade: 'Trade',
+  StockBalance: 'StockBalance'
 };
 
 /**

@@ -14,35 +14,135 @@ const customStyles = `
   }
   
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    0% { 
+      opacity: 0; 
+      transform: translateY(40px) scale(0.95); 
+      filter: blur(4px);
+    }
+    50% {
+      opacity: 0.6;
+      transform: translateY(20px) scale(0.98);
+      filter: blur(2px);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+      filter: blur(0px);
+    }
   }
   
   @keyframes slideInLeft {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
+    0% { 
+      opacity: 0; 
+      transform: translateX(-50px) scale(0.9); 
+      filter: blur(3px);
+    }
+    60% {
+      opacity: 0.8;
+      transform: translateX(-10px) scale(0.95);
+      filter: blur(1px);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateX(0) scale(1); 
+      filter: blur(0px);
+    }
   }
   
   @keyframes slideInRight {
-    from { opacity: 0; transform: translateX(30px); }
-    to { opacity: 1; transform: translateX(0); }
+    0% { 
+      opacity: 0; 
+      transform: translateX(50px) scale(0.9) rotate(5deg); 
+      filter: blur(3px);
+    }
+    60% {
+      opacity: 0.8;
+      transform: translateX(10px) scale(0.95) rotate(2deg);
+      filter: blur(1px);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateX(0) scale(1) rotate(0deg); 
+      filter: blur(0px);
+    }
   }
   
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+  @keyframes fadeInRight {
+    0% { 
+      opacity: 0; 
+      transform: translateX(60px) translateY(20px) scale(0.8); 
+      filter: blur(5px);
+    }
+    40% {
+      opacity: 0.4;
+      transform: translateX(30px) translateY(10px) scale(0.9);
+      filter: blur(2px);
+    }
+    70% {
+      opacity: 0.8;
+      transform: translateX(5px) translateY(2px) scale(0.98);
+      filter: blur(1px);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateX(0) translateY(0) scale(1); 
+      filter: blur(0px);
+    }
+  }
+  
+  @keyframes gentleFloat {
+    0%, 100% { 
+      transform: translateY(0px) rotate(0deg); 
+      opacity: 0.8;
+    }
+    50% { 
+      transform: translateY(-8px) rotate(2deg); 
+      opacity: 1;
+    }
+  }
+  
+  @keyframes staggeredBounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    40% {
+      transform: translateY(-8px) scale(1.05);
+    }
+    60% {
+      transform: translateY(-4px) scale(1.02);
+    }
   }
   
   .animate-blob { animation: blob 7s infinite; }
-  .animate-fadeInUp { animation: fadeInUp 1s ease-out; }
-  .animate-slideInLeft { animation: slideInLeft 1s ease-out; }
-  .animate-slideInRight { animation: slideInRight 1s ease-out; }
-  .animate-float { animation: float 3s ease-in-out infinite; }
+  .animate-fadeInUp { 
+    animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; 
+  }
+  .animate-slideInLeft { 
+    animation: slideInLeft 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; 
+  }
+  .animate-slideInRight { 
+    animation: slideInRight 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; 
+  }
+  .animate-fadeInRight { 
+    animation: fadeInRight 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; 
+  }
+  .animate-float { 
+    animation: gentleFloat 4s ease-in-out infinite; 
+  }
+  .animate-staggeredBounce { 
+    animation: staggeredBounce 2s ease-out; 
+  }
   
+  .animation-delay-100 { animation-delay: 0.1s; }
   .animation-delay-200 { animation-delay: 0.2s; }
+  .animation-delay-300 { animation-delay: 0.3s; }
   .animation-delay-400 { animation-delay: 0.4s; }
+  .animation-delay-500 { animation-delay: 0.5s; }
   .animation-delay-600 { animation-delay: 0.6s; }
+  .animation-delay-700 { animation-delay: 0.7s; }
   .animation-delay-800 { animation-delay: 0.8s; }
+  .animation-delay-900 { animation-delay: 0.9s; }
+  .animation-delay-1000 { animation-delay: 1s; }
   .animation-delay-2000 { animation-delay: 2s; }
   .animation-delay-4000 { animation-delay: 4s; }
 `;
@@ -64,30 +164,30 @@ export default function Home() {
       <section className="mt-6 bg-gradient-to-br from-orange-50 via-blue-50 to-purple-50 py-12 sm:py-16 lg:py-20 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div className="animate-fadeInUp">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight animate-slideInLeft">
-                <span className="inline-block hover:scale-105 transition-transform duration-300">
+            <div className="animate-fadeInUp animation-delay-100">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight animate-slideInLeft animation-delay-200">
+                <span className="inline-block hover:scale-105 transition-transform duration-300 animate-fadeInUp animation-delay-300">
                   India's
                 </span>{" "}
-                <span className="inline-block hover:scale-105 transition-transform duration-300">
+                <span className="inline-block hover:scale-105 transition-transform duration-300 animate-fadeInUp animation-delay-400">
                   Leading
                 </span>
                 <br />
-                <span className="text-gray-700 inline-block hover:scale-105 transition-transform duration-300">
+                <span className="text-gray-700 inline-block hover:scale-105 transition-transform duration-300 animate-fadeInUp animation-delay-500">
                   Game
                 </span>{" "}
-                <span className="text-gray-700 inline-block hover:scale-105 transition-transform duration-300">
+                <span className="text-gray-700 inline-block hover:scale-105 transition-transform duration-300 animate-fadeInUp animation-delay-600">
                   of
                 </span>{" "}
-                <span className="text-gray-700 inline-block hover:scale-105 transition-transform duration-300">
+                <span className="text-gray-700 inline-block hover:scale-105 transition-transform duration-300 animate-fadeInUp animation-delay-700">
                   Skill
                 </span>
               </h1>
-              <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 animate-slideInLeft animation-delay-200">
+              <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 animate-slideInLeft animation-delay-800">
                 Sports, Entertainment, Economy or Finance.
               </p>
-              <div className="flex items-center space-x-4 mb-6 animate-slideInLeft animation-delay-400">
-                <button className="bg-black text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-gray-800 hover:scale-105 hover:shadow-xl transition-all duration-300 text-sm sm:text-base transform active:scale-95 group">
+              <div className="flex items-center space-x-4 mb-6 animate-slideInLeft animation-delay-900">
+                <button className="bg-black text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-gray-800 hover:scale-105 hover:shadow-xl transition-all duration-300 text-sm sm:text-base transform active:scale-95 group animate-staggeredBounce animation-delay-1000">
                   <span className="group-hover:animate-pulse">
                     Download App
                   </span>
@@ -96,7 +196,7 @@ export default function Home() {
                   </span>
                 </button>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2 animate-slideInLeft animation-delay-600">
+              <div className="flex items-center space-x-2 text-sm text-gray-500 mb-2 animate-fadeInUp animation-delay-1000">
                 <input
                   type="checkbox"
                   className="rounded hover:scale-110 transition-transform duration-200"
@@ -105,16 +205,16 @@ export default function Home() {
                   For 18 years and above only
                 </span>
               </div>
-              <p className="text-xs text-gray-400 animate-slideInLeft animation-delay-800 hover:text-gray-600 transition-colors duration-200">
+              <p className="text-xs text-gray-400 animate-fadeInUp animation-delay-1000 hover:text-gray-600 transition-colors duration-200">
                 We are currently unavailable in Andhra Pradesh, Assam,
                 Chhattisgarh, Haryana, Nagaland, Sikkim, Tamil Nadu, and
                 Telangana.
               </p>
             </div>
-            <div className="relative mt-8 lg:mt-0 animate-fadeInRight">
+            <div className="relative mt-8 lg:mt-0 animate-fadeInRight animation-delay-300">
               {/* Prediction Cards */}
               <div className="space-y-3 sm:space-y-4">
-                <div className="bg-white rounded-xl p-3 sm:p-4 shadow-lg transform rotate-2 hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-slideInRight animation-delay-200">
+                <div className="bg-white rounded-xl p-3 sm:p-4 shadow-lg transform rotate-2 hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-slideInRight animation-delay-500">
                   <p className="text-xs sm:text-sm font-medium mb-2 sm:mb-3 hover:text-blue-600 transition-colors duration-200">
                     Virat Kohli to score 5 centuries in 2025?
                   </p>
@@ -127,7 +227,7 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
-                <div className="bg-white rounded-xl p-3 sm:p-4 shadow-lg transform -rotate-1 hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-slideInRight animation-delay-400">
+                <div className="bg-white rounded-xl p-3 sm:p-4 shadow-lg transform -rotate-1 hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-slideInRight animation-delay-700">
                   <p className="text-xs sm:text-sm font-medium mb-2 sm:mb-3 hover:text-blue-600 transition-colors duration-200">
                     Bengaluru to win the Indian T20 League?
                   </p>
@@ -140,7 +240,7 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
-                <div className="bg-white rounded-xl p-3 sm:p-4 shadow-lg transform rotate-1 hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-slideInRight animation-delay-600">
+                <div className="bg-white rounded-xl p-3 sm:p-4 shadow-lg transform rotate-1 hover:rotate-0 hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-slideInRight animation-delay-900">
                   <p className="text-xs sm:text-sm font-medium mb-2 sm:mb-3 hover:text-blue-600 transition-colors duration-200">
                     France to win the Football World Championship 2026
                   </p>
@@ -156,9 +256,9 @@ export default function Home() {
               </div>
 
               {/* Floating decorative elements */}
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-bounce opacity-80"></div>
-              <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-r from-green-400 to-yellow-400 rounded-full animate-pulse"></div>
-              <div className="absolute top-1/2 -right-8 w-4 h-4 bg-pink-400 rounded-full animate-ping"></div>
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-float opacity-80 animation-delay-1000"></div>
+              <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-r from-green-400 to-yellow-400 rounded-full animate-float opacity-70 animation-delay-1200"></div>
+              <div className="absolute top-1/2 -right-8 w-4 h-4 bg-pink-400 rounded-full animate-float opacity-60 animation-delay-800"></div>
             </div>
           </div>
         </div>

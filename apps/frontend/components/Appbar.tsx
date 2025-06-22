@@ -11,7 +11,7 @@ export default function Appbar() {
         <div className="flex justify-between items-center">
           <Link href={"/"}>
             <div className="w-[80px] md:w-[8vw] h-[60px] relative bg-[#F3F3F3]">
-              <Image
+              {/* <Image
                 src="https://probo.in/_next/image?url=https%3A%2F%2Fd39axbyagw7ipf.cloudfront.net%2Fimages%2Flogo-sm.webp&w=128&q=75"
                 alt="probo logo"
                 fill
@@ -19,7 +19,8 @@ export default function Appbar() {
                 style={{
                   objectFit: "contain",
                 }}
-              />
+              /> */}
+              <h1 className="md:text-3xl text-xl py-2 font-serif">OpTrade</h1>
             </div>
           </Link>
           <div className="flex items-center justify-between gap-10">

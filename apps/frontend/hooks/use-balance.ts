@@ -19,7 +19,12 @@ export const useBalance = (): {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API}/v1/user/balance/${userId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_API}/v1/user/balance/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user?.jwtToken}`,
+            },
+          }
         );
 
         if (response.status == 200) {

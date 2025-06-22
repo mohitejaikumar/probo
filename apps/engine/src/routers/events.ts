@@ -5,6 +5,7 @@ import {
   InMemoryINRBalances,
   InMemoryOrderBook,
   InMemoryOrders,
+  InMemoryStockBalance,
   InMemoryTrades,
 } from "../store";
 import { Sides } from "@repo/types";
@@ -251,7 +252,7 @@ export const initiateOrderLogic = async (
             isPseudoMatch = true;
             if (sellerTradeOty == sellerOrder.quantity) {
               // mark this as full order completed
-              InMemoryOrders[sellerOrderId].status = "EXECUTED";
+              InMemoryOrders[sellerOrderId].status = "COMPLETED";
             }
             // broadcast this message
             const update = {
@@ -314,14 +315,46 @@ export const initiateOrderLogic = async (
           InMemoryINRBalances[userId]!.balance -=
             (price - order.price) * sellerTradeOty;
 
+          // update the pool
+          if (!InMemoryStockBalance[eventId]) {
+            InMemoryStockBalance[eventId] = {};
+          }
+          if (!InMemoryStockBalance[eventId]![userId]) {
+            InMemoryStockBalance[eventId]![userId] = {
+              yesQty: 0,
+              noQty: 0,
+            };
+          }
+          if (!InMemoryStockBalance[eventId]![sellerOrder.userId]) {
+            InMemoryStockBalance[eventId]![sellerOrder.userId] = {
+              yesQty: 0,
+              noQty: 0,
+            };
+          }
+          if (isPseudoMatch) {
+            if (side == "YES") {
+              InMemoryStockBalance[eventId]![userId]!.yesQty += sellerTradeOty;
+              InMemoryStockBalance[eventId]![sellerOrder.userId]!.noQty +=
+                sellerTradeOty;
+            } else {
+              InMemoryStockBalance[eventId]![userId]!.noQty += sellerTradeOty;
+              InMemoryStockBalance[eventId]![sellerOrder.userId]!.yesQty +=
+                sellerTradeOty;
+            }
+          } else {
+            if (side == "YES") {
+              InMemoryStockBalance[eventId]![userId]!.yesQty += sellerTradeOty;
+              InMemoryStockBalance[eventId]![sellerOrder.userId]!.yesQty -=
+                sellerTradeOty;
+            } else {
+              InMemoryStockBalance[eventId]![userId]!.noQty += sellerTradeOty;
+              InMemoryStockBalance[eventId]![sellerOrder.userId]!.noQty -=
+                sellerTradeOty;
+            }
+          }
+
           // remove the order if it is finished
           if (sellerOrder.quantity == 0) {
-            InMemoryOrders[sellerOrderId]!.status = "EXECUTED";
-            const data = {
-              id: sellerOrderId,
-              status: "EXECUTED",
-            };
-            await BroadcastChannel("order_executed", data);
             order.userOrders.shift();
           }
         }
@@ -482,11 +515,23 @@ export async function exit(
           sellerOrder.quantity -= sellerQuantity;
           remainingQty -= sellerQuantity;
           tradeQty -= sellerQuantity;
+
+          // update the pool
+          if (side == "YES") {
+            InMemoryStockBalance[eventId]![userId]!.yesQty -= sellerQuantity;
+            InMemoryStockBalance[eventId]![sellerOrder.userId]!.noQty -=
+              sellerQuantity;
+          } else {
+            InMemoryStockBalance[eventId]![userId]!.noQty -= sellerQuantity;
+            InMemoryStockBalance[eventId]![sellerOrder.userId]!.yesQty -=
+              sellerQuantity;
+          }
+
           if (sellerOrder.quantity == 0) {
             InMemoryOrders[sellerOrderId]!.status = "EXECUTED";
             const data = {
               id: sellerOrderId,
-              status: "EXECUTED",
+              status: InMemoryOrders[sellerOrderId]!.status,
             };
             await BroadcastChannel("order_executed", data);
             order.userOrders.splice(i, 1);

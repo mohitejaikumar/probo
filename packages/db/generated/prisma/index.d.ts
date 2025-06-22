@@ -33,6 +33,11 @@ export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
  * 
  */
 export type Trade = $Result.DefaultSelection<Prisma.$TradePayload>
+/**
+ * Model StockBalance
+ * 
+ */
+export type StockBalance = $Result.DefaultSelection<Prisma.$StockBalancePayload>
 
 /**
  * Enums
@@ -240,6 +245,16 @@ export class PrismaClient<
     * ```
     */
   get trade(): Prisma.TradeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stockBalance`: Exposes CRUD operations for the **StockBalance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockBalances
+    * const stockBalances = await prisma.stockBalance.findMany()
+    * ```
+    */
+  get stockBalance(): Prisma.StockBalanceDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -683,7 +698,8 @@ export namespace Prisma {
     User: 'User',
     Event: 'Event',
     Order: 'Order',
-    Trade: 'Trade'
+    Trade: 'Trade',
+    StockBalance: 'StockBalance'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -702,7 +718,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "event" | "order" | "trade"
+      modelProps: "user" | "event" | "order" | "trade" | "stockBalance"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1002,6 +1018,80 @@ export namespace Prisma {
           }
         }
       }
+      StockBalance: {
+        payload: Prisma.$StockBalancePayload<ExtArgs>
+        fields: Prisma.StockBalanceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockBalanceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockBalanceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>
+          }
+          findFirst: {
+            args: Prisma.StockBalanceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockBalanceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>
+          }
+          findMany: {
+            args: Prisma.StockBalanceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>[]
+          }
+          create: {
+            args: Prisma.StockBalanceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>
+          }
+          createMany: {
+            args: Prisma.StockBalanceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockBalanceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>[]
+          }
+          delete: {
+            args: Prisma.StockBalanceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>
+          }
+          update: {
+            args: Prisma.StockBalanceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>
+          }
+          deleteMany: {
+            args: Prisma.StockBalanceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockBalanceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StockBalanceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>[]
+          }
+          upsert: {
+            args: Prisma.StockBalanceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockBalancePayload>
+          }
+          aggregate: {
+            args: Prisma.StockBalanceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockBalance>
+          }
+          groupBy: {
+            args: Prisma.StockBalanceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockBalanceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockBalanceCountArgs<ExtArgs>
+            result: $Utils.Optional<StockBalanceCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1090,6 +1180,7 @@ export namespace Prisma {
     event?: EventOmit
     order?: OrderOmit
     trade?: TradeOmit
+    stockBalance?: StockBalanceOmit
   }
 
   /* Types for Logging */
@@ -1187,12 +1278,14 @@ export namespace Prisma {
     orders: number
     boughtTrade: number
     sellTrade: number
+    StockBalance: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
     boughtTrade?: boolean | UserCountOutputTypeCountBoughtTradeArgs
     sellTrade?: boolean | UserCountOutputTypeCountSellTradeArgs
+    StockBalance?: boolean | UserCountOutputTypeCountStockBalanceArgs
   }
 
   // Custom InputTypes
@@ -1227,6 +1320,13 @@ export namespace Prisma {
     where?: TradeWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountStockBalanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockBalanceWhereInput
+  }
+
 
   /**
    * Count Type EventCountOutputType
@@ -1235,11 +1335,13 @@ export namespace Prisma {
   export type EventCountOutputType = {
     orders: number
     trades: number
+    StockBalance: number
   }
 
   export type EventCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | EventCountOutputTypeCountOrdersArgs
     trades?: boolean | EventCountOutputTypeCountTradesArgs
+    StockBalance?: boolean | EventCountOutputTypeCountStockBalanceArgs
   }
 
   // Custom InputTypes
@@ -1265,6 +1367,13 @@ export namespace Prisma {
    */
   export type EventCountOutputTypeCountTradesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TradeWhereInput
+  }
+
+  /**
+   * EventCountOutputType without action
+   */
+  export type EventCountOutputTypeCountStockBalanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockBalanceWhereInput
   }
 
 
@@ -1485,6 +1594,7 @@ export namespace Prisma {
     orders?: boolean | User$ordersArgs<ExtArgs>
     boughtTrade?: boolean | User$boughtTradeArgs<ExtArgs>
     sellTrade?: boolean | User$sellTradeArgs<ExtArgs>
+    StockBalance?: boolean | User$StockBalanceArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1520,6 +1630,7 @@ export namespace Prisma {
     orders?: boolean | User$ordersArgs<ExtArgs>
     boughtTrade?: boolean | User$boughtTradeArgs<ExtArgs>
     sellTrade?: boolean | User$sellTradeArgs<ExtArgs>
+    StockBalance?: boolean | User$StockBalanceArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1531,6 +1642,7 @@ export namespace Prisma {
       orders: Prisma.$OrderPayload<ExtArgs>[]
       boughtTrade: Prisma.$TradePayload<ExtArgs>[]
       sellTrade: Prisma.$TradePayload<ExtArgs>[]
+      StockBalance: Prisma.$StockBalancePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1936,6 +2048,7 @@ export namespace Prisma {
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     boughtTrade<T extends User$boughtTradeArgs<ExtArgs> = {}>(args?: Subset<T, User$boughtTradeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sellTrade<T extends User$sellTradeArgs<ExtArgs> = {}>(args?: Subset<T, User$sellTradeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    StockBalance<T extends User$StockBalanceArgs<ExtArgs> = {}>(args?: Subset<T, User$StockBalanceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2431,6 +2544,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.StockBalance
+   */
+  export type User$StockBalanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    where?: StockBalanceWhereInput
+    orderBy?: StockBalanceOrderByWithRelationInput | StockBalanceOrderByWithRelationInput[]
+    cursor?: StockBalanceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockBalanceScalarFieldEnum | StockBalanceScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2477,6 +2614,8 @@ export namespace Prisma {
     description: string | null
     createdAt: Date | null
     endTime: Date | null
+    winner: string | null
+    payoutDone: boolean | null
   }
 
   export type EventMaxAggregateOutputType = {
@@ -2485,6 +2624,8 @@ export namespace Prisma {
     description: string | null
     createdAt: Date | null
     endTime: Date | null
+    winner: string | null
+    payoutDone: boolean | null
   }
 
   export type EventCountAggregateOutputType = {
@@ -2495,6 +2636,8 @@ export namespace Prisma {
     endTime: number
     noPrice: number
     yesPrice: number
+    winner: number
+    payoutDone: number
     _all: number
   }
 
@@ -2515,6 +2658,8 @@ export namespace Prisma {
     description?: true
     createdAt?: true
     endTime?: true
+    winner?: true
+    payoutDone?: true
   }
 
   export type EventMaxAggregateInputType = {
@@ -2523,6 +2668,8 @@ export namespace Prisma {
     description?: true
     createdAt?: true
     endTime?: true
+    winner?: true
+    payoutDone?: true
   }
 
   export type EventCountAggregateInputType = {
@@ -2533,6 +2680,8 @@ export namespace Prisma {
     endTime?: true
     noPrice?: true
     yesPrice?: true
+    winner?: true
+    payoutDone?: true
     _all?: true
   }
 
@@ -2630,6 +2779,8 @@ export namespace Prisma {
     endTime: Date
     noPrice: number[]
     yesPrice: number[]
+    winner: string
+    payoutDone: boolean
     _count: EventCountAggregateOutputType | null
     _avg: EventAvgAggregateOutputType | null
     _sum: EventSumAggregateOutputType | null
@@ -2659,8 +2810,11 @@ export namespace Prisma {
     endTime?: boolean
     noPrice?: boolean
     yesPrice?: boolean
+    winner?: boolean
+    payoutDone?: boolean
     orders?: boolean | Event$ordersArgs<ExtArgs>
     trades?: boolean | Event$tradesArgs<ExtArgs>
+    StockBalance?: boolean | Event$StockBalanceArgs<ExtArgs>
     _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
@@ -2672,6 +2826,8 @@ export namespace Prisma {
     endTime?: boolean
     noPrice?: boolean
     yesPrice?: boolean
+    winner?: boolean
+    payoutDone?: boolean
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2682,6 +2838,8 @@ export namespace Prisma {
     endTime?: boolean
     noPrice?: boolean
     yesPrice?: boolean
+    winner?: boolean
+    payoutDone?: boolean
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectScalar = {
@@ -2692,12 +2850,15 @@ export namespace Prisma {
     endTime?: boolean
     noPrice?: boolean
     yesPrice?: boolean
+    winner?: boolean
+    payoutDone?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "createdAt" | "endTime" | "noPrice" | "yesPrice", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "createdAt" | "endTime" | "noPrice" | "yesPrice" | "winner" | "payoutDone", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Event$ordersArgs<ExtArgs>
     trades?: boolean | Event$tradesArgs<ExtArgs>
+    StockBalance?: boolean | Event$StockBalanceArgs<ExtArgs>
     _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type EventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2708,6 +2869,7 @@ export namespace Prisma {
     objects: {
       orders: Prisma.$OrderPayload<ExtArgs>[]
       trades: Prisma.$TradePayload<ExtArgs>[]
+      StockBalance: Prisma.$StockBalancePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2717,6 +2879,8 @@ export namespace Prisma {
       endTime: Date
       noPrice: number[]
       yesPrice: number[]
+      winner: string
+      payoutDone: boolean
     }, ExtArgs["result"]["event"]>
     composites: {}
   }
@@ -3113,6 +3277,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     orders<T extends Event$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Event$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     trades<T extends Event$tradesArgs<ExtArgs> = {}>(args?: Subset<T, Event$tradesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    StockBalance<T extends Event$StockBalanceArgs<ExtArgs> = {}>(args?: Subset<T, Event$StockBalanceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3149,6 +3314,8 @@ export namespace Prisma {
     readonly endTime: FieldRef<"Event", 'DateTime'>
     readonly noPrice: FieldRef<"Event", 'Float[]'>
     readonly yesPrice: FieldRef<"Event", 'Float[]'>
+    readonly winner: FieldRef<"Event", 'String'>
+    readonly payoutDone: FieldRef<"Event", 'Boolean'>
   }
     
 
@@ -3582,6 +3749,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TradeScalarFieldEnum | TradeScalarFieldEnum[]
+  }
+
+  /**
+   * Event.StockBalance
+   */
+  export type Event$StockBalanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    where?: StockBalanceWhereInput
+    orderBy?: StockBalanceOrderByWithRelationInput | StockBalanceOrderByWithRelationInput[]
+    cursor?: StockBalanceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockBalanceScalarFieldEnum | StockBalanceScalarFieldEnum[]
   }
 
   /**
@@ -5971,6 +6162,1110 @@ export namespace Prisma {
 
 
   /**
+   * Model StockBalance
+   */
+
+  export type AggregateStockBalance = {
+    _count: StockBalanceCountAggregateOutputType | null
+    _avg: StockBalanceAvgAggregateOutputType | null
+    _sum: StockBalanceSumAggregateOutputType | null
+    _min: StockBalanceMinAggregateOutputType | null
+    _max: StockBalanceMaxAggregateOutputType | null
+  }
+
+  export type StockBalanceAvgAggregateOutputType = {
+    yesQty: number | null
+    noQty: number | null
+  }
+
+  export type StockBalanceSumAggregateOutputType = {
+    yesQty: number | null
+    noQty: number | null
+  }
+
+  export type StockBalanceMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    eventId: string | null
+    yesQty: number | null
+    noQty: number | null
+  }
+
+  export type StockBalanceMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    eventId: string | null
+    yesQty: number | null
+    noQty: number | null
+  }
+
+  export type StockBalanceCountAggregateOutputType = {
+    id: number
+    userId: number
+    eventId: number
+    yesQty: number
+    noQty: number
+    _all: number
+  }
+
+
+  export type StockBalanceAvgAggregateInputType = {
+    yesQty?: true
+    noQty?: true
+  }
+
+  export type StockBalanceSumAggregateInputType = {
+    yesQty?: true
+    noQty?: true
+  }
+
+  export type StockBalanceMinAggregateInputType = {
+    id?: true
+    userId?: true
+    eventId?: true
+    yesQty?: true
+    noQty?: true
+  }
+
+  export type StockBalanceMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    eventId?: true
+    yesQty?: true
+    noQty?: true
+  }
+
+  export type StockBalanceCountAggregateInputType = {
+    id?: true
+    userId?: true
+    eventId?: true
+    yesQty?: true
+    noQty?: true
+    _all?: true
+  }
+
+  export type StockBalanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockBalance to aggregate.
+     */
+    where?: StockBalanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockBalances to fetch.
+     */
+    orderBy?: StockBalanceOrderByWithRelationInput | StockBalanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockBalanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockBalances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockBalances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockBalances
+    **/
+    _count?: true | StockBalanceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StockBalanceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StockBalanceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockBalanceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockBalanceMaxAggregateInputType
+  }
+
+  export type GetStockBalanceAggregateType<T extends StockBalanceAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockBalance]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockBalance[P]>
+      : GetScalarType<T[P], AggregateStockBalance[P]>
+  }
+
+
+
+
+  export type StockBalanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockBalanceWhereInput
+    orderBy?: StockBalanceOrderByWithAggregationInput | StockBalanceOrderByWithAggregationInput[]
+    by: StockBalanceScalarFieldEnum[] | StockBalanceScalarFieldEnum
+    having?: StockBalanceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockBalanceCountAggregateInputType | true
+    _avg?: StockBalanceAvgAggregateInputType
+    _sum?: StockBalanceSumAggregateInputType
+    _min?: StockBalanceMinAggregateInputType
+    _max?: StockBalanceMaxAggregateInputType
+  }
+
+  export type StockBalanceGroupByOutputType = {
+    id: string
+    userId: string
+    eventId: string
+    yesQty: number
+    noQty: number
+    _count: StockBalanceCountAggregateOutputType | null
+    _avg: StockBalanceAvgAggregateOutputType | null
+    _sum: StockBalanceSumAggregateOutputType | null
+    _min: StockBalanceMinAggregateOutputType | null
+    _max: StockBalanceMaxAggregateOutputType | null
+  }
+
+  type GetStockBalanceGroupByPayload<T extends StockBalanceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockBalanceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockBalanceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockBalanceGroupByOutputType[P]>
+            : GetScalarType<T[P], StockBalanceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockBalanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    eventId?: boolean
+    yesQty?: boolean
+    noQty?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockBalance"]>
+
+  export type StockBalanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    eventId?: boolean
+    yesQty?: boolean
+    noQty?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockBalance"]>
+
+  export type StockBalanceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    eventId?: boolean
+    yesQty?: boolean
+    noQty?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockBalance"]>
+
+  export type StockBalanceSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    eventId?: boolean
+    yesQty?: boolean
+    noQty?: boolean
+  }
+
+  export type StockBalanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "eventId" | "yesQty" | "noQty", ExtArgs["result"]["stockBalance"]>
+  export type StockBalanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }
+  export type StockBalanceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }
+  export type StockBalanceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }
+
+  export type $StockBalancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockBalance"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      event: Prisma.$EventPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      eventId: string
+      yesQty: number
+      noQty: number
+    }, ExtArgs["result"]["stockBalance"]>
+    composites: {}
+  }
+
+  type StockBalanceGetPayload<S extends boolean | null | undefined | StockBalanceDefaultArgs> = $Result.GetResult<Prisma.$StockBalancePayload, S>
+
+  type StockBalanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StockBalanceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StockBalanceCountAggregateInputType | true
+    }
+
+  export interface StockBalanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockBalance'], meta: { name: 'StockBalance' } }
+    /**
+     * Find zero or one StockBalance that matches the filter.
+     * @param {StockBalanceFindUniqueArgs} args - Arguments to find a StockBalance
+     * @example
+     * // Get one StockBalance
+     * const stockBalance = await prisma.stockBalance.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockBalanceFindUniqueArgs>(args: SelectSubset<T, StockBalanceFindUniqueArgs<ExtArgs>>): Prisma__StockBalanceClient<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StockBalance that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StockBalanceFindUniqueOrThrowArgs} args - Arguments to find a StockBalance
+     * @example
+     * // Get one StockBalance
+     * const stockBalance = await prisma.stockBalance.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockBalanceFindUniqueOrThrowArgs>(args: SelectSubset<T, StockBalanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockBalanceClient<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockBalance that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockBalanceFindFirstArgs} args - Arguments to find a StockBalance
+     * @example
+     * // Get one StockBalance
+     * const stockBalance = await prisma.stockBalance.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockBalanceFindFirstArgs>(args?: SelectSubset<T, StockBalanceFindFirstArgs<ExtArgs>>): Prisma__StockBalanceClient<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockBalance that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockBalanceFindFirstOrThrowArgs} args - Arguments to find a StockBalance
+     * @example
+     * // Get one StockBalance
+     * const stockBalance = await prisma.stockBalance.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockBalanceFindFirstOrThrowArgs>(args?: SelectSubset<T, StockBalanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockBalanceClient<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StockBalances that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockBalanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockBalances
+     * const stockBalances = await prisma.stockBalance.findMany()
+     * 
+     * // Get first 10 StockBalances
+     * const stockBalances = await prisma.stockBalance.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockBalanceWithIdOnly = await prisma.stockBalance.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockBalanceFindManyArgs>(args?: SelectSubset<T, StockBalanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StockBalance.
+     * @param {StockBalanceCreateArgs} args - Arguments to create a StockBalance.
+     * @example
+     * // Create one StockBalance
+     * const StockBalance = await prisma.stockBalance.create({
+     *   data: {
+     *     // ... data to create a StockBalance
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockBalanceCreateArgs>(args: SelectSubset<T, StockBalanceCreateArgs<ExtArgs>>): Prisma__StockBalanceClient<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StockBalances.
+     * @param {StockBalanceCreateManyArgs} args - Arguments to create many StockBalances.
+     * @example
+     * // Create many StockBalances
+     * const stockBalance = await prisma.stockBalance.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockBalanceCreateManyArgs>(args?: SelectSubset<T, StockBalanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockBalances and returns the data saved in the database.
+     * @param {StockBalanceCreateManyAndReturnArgs} args - Arguments to create many StockBalances.
+     * @example
+     * // Create many StockBalances
+     * const stockBalance = await prisma.stockBalance.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockBalances and only return the `id`
+     * const stockBalanceWithIdOnly = await prisma.stockBalance.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockBalanceCreateManyAndReturnArgs>(args?: SelectSubset<T, StockBalanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StockBalance.
+     * @param {StockBalanceDeleteArgs} args - Arguments to delete one StockBalance.
+     * @example
+     * // Delete one StockBalance
+     * const StockBalance = await prisma.stockBalance.delete({
+     *   where: {
+     *     // ... filter to delete one StockBalance
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockBalanceDeleteArgs>(args: SelectSubset<T, StockBalanceDeleteArgs<ExtArgs>>): Prisma__StockBalanceClient<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StockBalance.
+     * @param {StockBalanceUpdateArgs} args - Arguments to update one StockBalance.
+     * @example
+     * // Update one StockBalance
+     * const stockBalance = await prisma.stockBalance.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockBalanceUpdateArgs>(args: SelectSubset<T, StockBalanceUpdateArgs<ExtArgs>>): Prisma__StockBalanceClient<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StockBalances.
+     * @param {StockBalanceDeleteManyArgs} args - Arguments to filter StockBalances to delete.
+     * @example
+     * // Delete a few StockBalances
+     * const { count } = await prisma.stockBalance.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockBalanceDeleteManyArgs>(args?: SelectSubset<T, StockBalanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockBalances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockBalanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockBalances
+     * const stockBalance = await prisma.stockBalance.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockBalanceUpdateManyArgs>(args: SelectSubset<T, StockBalanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockBalances and returns the data updated in the database.
+     * @param {StockBalanceUpdateManyAndReturnArgs} args - Arguments to update many StockBalances.
+     * @example
+     * // Update many StockBalances
+     * const stockBalance = await prisma.stockBalance.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StockBalances and only return the `id`
+     * const stockBalanceWithIdOnly = await prisma.stockBalance.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StockBalanceUpdateManyAndReturnArgs>(args: SelectSubset<T, StockBalanceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StockBalance.
+     * @param {StockBalanceUpsertArgs} args - Arguments to update or create a StockBalance.
+     * @example
+     * // Update or create a StockBalance
+     * const stockBalance = await prisma.stockBalance.upsert({
+     *   create: {
+     *     // ... data to create a StockBalance
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockBalance we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockBalanceUpsertArgs>(args: SelectSubset<T, StockBalanceUpsertArgs<ExtArgs>>): Prisma__StockBalanceClient<$Result.GetResult<Prisma.$StockBalancePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StockBalances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockBalanceCountArgs} args - Arguments to filter StockBalances to count.
+     * @example
+     * // Count the number of StockBalances
+     * const count = await prisma.stockBalance.count({
+     *   where: {
+     *     // ... the filter for the StockBalances we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockBalanceCountArgs>(
+      args?: Subset<T, StockBalanceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockBalanceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockBalance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockBalanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockBalanceAggregateArgs>(args: Subset<T, StockBalanceAggregateArgs>): Prisma.PrismaPromise<GetStockBalanceAggregateType<T>>
+
+    /**
+     * Group by StockBalance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockBalanceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockBalanceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockBalanceGroupByArgs['orderBy'] }
+        : { orderBy?: StockBalanceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockBalanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockBalanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockBalance model
+   */
+  readonly fields: StockBalanceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockBalance.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockBalanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    event<T extends EventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EventDefaultArgs<ExtArgs>>): Prisma__EventClient<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockBalance model
+   */
+  interface StockBalanceFieldRefs {
+    readonly id: FieldRef<"StockBalance", 'String'>
+    readonly userId: FieldRef<"StockBalance", 'String'>
+    readonly eventId: FieldRef<"StockBalance", 'String'>
+    readonly yesQty: FieldRef<"StockBalance", 'Int'>
+    readonly noQty: FieldRef<"StockBalance", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockBalance findUnique
+   */
+  export type StockBalanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which StockBalance to fetch.
+     */
+    where: StockBalanceWhereUniqueInput
+  }
+
+  /**
+   * StockBalance findUniqueOrThrow
+   */
+  export type StockBalanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which StockBalance to fetch.
+     */
+    where: StockBalanceWhereUniqueInput
+  }
+
+  /**
+   * StockBalance findFirst
+   */
+  export type StockBalanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which StockBalance to fetch.
+     */
+    where?: StockBalanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockBalances to fetch.
+     */
+    orderBy?: StockBalanceOrderByWithRelationInput | StockBalanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockBalances.
+     */
+    cursor?: StockBalanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockBalances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockBalances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockBalances.
+     */
+    distinct?: StockBalanceScalarFieldEnum | StockBalanceScalarFieldEnum[]
+  }
+
+  /**
+   * StockBalance findFirstOrThrow
+   */
+  export type StockBalanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which StockBalance to fetch.
+     */
+    where?: StockBalanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockBalances to fetch.
+     */
+    orderBy?: StockBalanceOrderByWithRelationInput | StockBalanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockBalances.
+     */
+    cursor?: StockBalanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockBalances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockBalances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockBalances.
+     */
+    distinct?: StockBalanceScalarFieldEnum | StockBalanceScalarFieldEnum[]
+  }
+
+  /**
+   * StockBalance findMany
+   */
+  export type StockBalanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * Filter, which StockBalances to fetch.
+     */
+    where?: StockBalanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockBalances to fetch.
+     */
+    orderBy?: StockBalanceOrderByWithRelationInput | StockBalanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockBalances.
+     */
+    cursor?: StockBalanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockBalances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockBalances.
+     */
+    skip?: number
+    distinct?: StockBalanceScalarFieldEnum | StockBalanceScalarFieldEnum[]
+  }
+
+  /**
+   * StockBalance create
+   */
+  export type StockBalanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockBalance.
+     */
+    data: XOR<StockBalanceCreateInput, StockBalanceUncheckedCreateInput>
+  }
+
+  /**
+   * StockBalance createMany
+   */
+  export type StockBalanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockBalances.
+     */
+    data: StockBalanceCreateManyInput | StockBalanceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockBalance createManyAndReturn
+   */
+  export type StockBalanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * The data used to create many StockBalances.
+     */
+    data: StockBalanceCreateManyInput | StockBalanceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockBalance update
+   */
+  export type StockBalanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockBalance.
+     */
+    data: XOR<StockBalanceUpdateInput, StockBalanceUncheckedUpdateInput>
+    /**
+     * Choose, which StockBalance to update.
+     */
+    where: StockBalanceWhereUniqueInput
+  }
+
+  /**
+   * StockBalance updateMany
+   */
+  export type StockBalanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockBalances.
+     */
+    data: XOR<StockBalanceUpdateManyMutationInput, StockBalanceUncheckedUpdateManyInput>
+    /**
+     * Filter which StockBalances to update
+     */
+    where?: StockBalanceWhereInput
+    /**
+     * Limit how many StockBalances to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockBalance updateManyAndReturn
+   */
+  export type StockBalanceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * The data used to update StockBalances.
+     */
+    data: XOR<StockBalanceUpdateManyMutationInput, StockBalanceUncheckedUpdateManyInput>
+    /**
+     * Filter which StockBalances to update
+     */
+    where?: StockBalanceWhereInput
+    /**
+     * Limit how many StockBalances to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockBalance upsert
+   */
+  export type StockBalanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockBalance to update in case it exists.
+     */
+    where: StockBalanceWhereUniqueInput
+    /**
+     * In case the StockBalance found by the `where` argument doesn't exist, create a new StockBalance with this data.
+     */
+    create: XOR<StockBalanceCreateInput, StockBalanceUncheckedCreateInput>
+    /**
+     * In case the StockBalance was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockBalanceUpdateInput, StockBalanceUncheckedUpdateInput>
+  }
+
+  /**
+   * StockBalance delete
+   */
+  export type StockBalanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+    /**
+     * Filter which StockBalance to delete.
+     */
+    where: StockBalanceWhereUniqueInput
+  }
+
+  /**
+   * StockBalance deleteMany
+   */
+  export type StockBalanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockBalances to delete
+     */
+    where?: StockBalanceWhereInput
+    /**
+     * Limit how many StockBalances to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockBalance without action
+   */
+  export type StockBalanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockBalance
+     */
+    select?: StockBalanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockBalance
+     */
+    omit?: StockBalanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockBalanceInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -6003,7 +7298,9 @@ export namespace Prisma {
     createdAt: 'createdAt',
     endTime: 'endTime',
     noPrice: 'noPrice',
-    yesPrice: 'yesPrice'
+    yesPrice: 'yesPrice',
+    winner: 'winner',
+    payoutDone: 'payoutDone'
   };
 
   export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -6040,6 +7337,17 @@ export namespace Prisma {
   };
 
   export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
+
+
+  export const StockBalanceScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    eventId: 'eventId',
+    yesQty: 'yesQty',
+    noQty: 'noQty'
+  };
+
+  export type StockBalanceScalarFieldEnum = (typeof StockBalanceScalarFieldEnum)[keyof typeof StockBalanceScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -6102,6 +7410,13 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -6177,6 +7492,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     boughtTrade?: TradeListRelationFilter
     sellTrade?: TradeListRelationFilter
+    StockBalance?: StockBalanceListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -6189,6 +7505,7 @@ export namespace Prisma {
     orders?: OrderOrderByRelationAggregateInput
     boughtTrade?: TradeOrderByRelationAggregateInput
     sellTrade?: TradeOrderByRelationAggregateInput
+    StockBalance?: StockBalanceOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -6204,6 +7521,7 @@ export namespace Prisma {
     orders?: OrderListRelationFilter
     boughtTrade?: TradeListRelationFilter
     sellTrade?: TradeListRelationFilter
+    StockBalance?: StockBalanceListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -6243,8 +7561,11 @@ export namespace Prisma {
     endTime?: DateTimeFilter<"Event"> | Date | string
     noPrice?: FloatNullableListFilter<"Event">
     yesPrice?: FloatNullableListFilter<"Event">
+    winner?: StringFilter<"Event"> | string
+    payoutDone?: BoolFilter<"Event"> | boolean
     orders?: OrderListRelationFilter
     trades?: TradeListRelationFilter
+    StockBalance?: StockBalanceListRelationFilter
   }
 
   export type EventOrderByWithRelationInput = {
@@ -6255,8 +7576,11 @@ export namespace Prisma {
     endTime?: SortOrder
     noPrice?: SortOrder
     yesPrice?: SortOrder
+    winner?: SortOrder
+    payoutDone?: SortOrder
     orders?: OrderOrderByRelationAggregateInput
     trades?: TradeOrderByRelationAggregateInput
+    StockBalance?: StockBalanceOrderByRelationAggregateInput
   }
 
   export type EventWhereUniqueInput = Prisma.AtLeast<{
@@ -6270,8 +7594,11 @@ export namespace Prisma {
     endTime?: DateTimeFilter<"Event"> | Date | string
     noPrice?: FloatNullableListFilter<"Event">
     yesPrice?: FloatNullableListFilter<"Event">
+    winner?: StringFilter<"Event"> | string
+    payoutDone?: BoolFilter<"Event"> | boolean
     orders?: OrderListRelationFilter
     trades?: TradeListRelationFilter
+    StockBalance?: StockBalanceListRelationFilter
   }, "id">
 
   export type EventOrderByWithAggregationInput = {
@@ -6282,6 +7609,8 @@ export namespace Prisma {
     endTime?: SortOrder
     noPrice?: SortOrder
     yesPrice?: SortOrder
+    winner?: SortOrder
+    payoutDone?: SortOrder
     _count?: EventCountOrderByAggregateInput
     _avg?: EventAvgOrderByAggregateInput
     _max?: EventMaxOrderByAggregateInput
@@ -6300,6 +7629,8 @@ export namespace Prisma {
     endTime?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     noPrice?: FloatNullableListFilter<"Event">
     yesPrice?: FloatNullableListFilter<"Event">
+    winner?: StringWithAggregatesFilter<"Event"> | string
+    payoutDone?: BoolWithAggregatesFilter<"Event"> | boolean
   }
 
   export type OrderWhereInput = {
@@ -6480,6 +7811,66 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Trade"> | Date | string
   }
 
+  export type StockBalanceWhereInput = {
+    AND?: StockBalanceWhereInput | StockBalanceWhereInput[]
+    OR?: StockBalanceWhereInput[]
+    NOT?: StockBalanceWhereInput | StockBalanceWhereInput[]
+    id?: StringFilter<"StockBalance"> | string
+    userId?: StringFilter<"StockBalance"> | string
+    eventId?: StringFilter<"StockBalance"> | string
+    yesQty?: IntFilter<"StockBalance"> | number
+    noQty?: IntFilter<"StockBalance"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    event?: XOR<EventScalarRelationFilter, EventWhereInput>
+  }
+
+  export type StockBalanceOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventId?: SortOrder
+    yesQty?: SortOrder
+    noQty?: SortOrder
+    user?: UserOrderByWithRelationInput
+    event?: EventOrderByWithRelationInput
+  }
+
+  export type StockBalanceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StockBalanceWhereInput | StockBalanceWhereInput[]
+    OR?: StockBalanceWhereInput[]
+    NOT?: StockBalanceWhereInput | StockBalanceWhereInput[]
+    userId?: StringFilter<"StockBalance"> | string
+    eventId?: StringFilter<"StockBalance"> | string
+    yesQty?: IntFilter<"StockBalance"> | number
+    noQty?: IntFilter<"StockBalance"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    event?: XOR<EventScalarRelationFilter, EventWhereInput>
+  }, "id">
+
+  export type StockBalanceOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventId?: SortOrder
+    yesQty?: SortOrder
+    noQty?: SortOrder
+    _count?: StockBalanceCountOrderByAggregateInput
+    _avg?: StockBalanceAvgOrderByAggregateInput
+    _max?: StockBalanceMaxOrderByAggregateInput
+    _min?: StockBalanceMinOrderByAggregateInput
+    _sum?: StockBalanceSumOrderByAggregateInput
+  }
+
+  export type StockBalanceScalarWhereWithAggregatesInput = {
+    AND?: StockBalanceScalarWhereWithAggregatesInput | StockBalanceScalarWhereWithAggregatesInput[]
+    OR?: StockBalanceScalarWhereWithAggregatesInput[]
+    NOT?: StockBalanceScalarWhereWithAggregatesInput | StockBalanceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StockBalance"> | string
+    userId?: StringWithAggregatesFilter<"StockBalance"> | string
+    eventId?: StringWithAggregatesFilter<"StockBalance"> | string
+    yesQty?: IntWithAggregatesFilter<"StockBalance"> | number
+    noQty?: IntWithAggregatesFilter<"StockBalance"> | number
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -6490,6 +7881,7 @@ export namespace Prisma {
     orders?: OrderCreateNestedManyWithoutUserInput
     boughtTrade?: TradeCreateNestedManyWithoutBuyerUserInput
     sellTrade?: TradeCreateNestedManyWithoutSellerUserInput
+    StockBalance?: StockBalanceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -6502,6 +7894,7 @@ export namespace Prisma {
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     boughtTrade?: TradeUncheckedCreateNestedManyWithoutBuyerUserInput
     sellTrade?: TradeUncheckedCreateNestedManyWithoutSellerUserInput
+    StockBalance?: StockBalanceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -6514,6 +7907,7 @@ export namespace Prisma {
     orders?: OrderUpdateManyWithoutUserNestedInput
     boughtTrade?: TradeUpdateManyWithoutBuyerUserNestedInput
     sellTrade?: TradeUpdateManyWithoutSellerUserNestedInput
+    StockBalance?: StockBalanceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -6526,6 +7920,7 @@ export namespace Prisma {
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     boughtTrade?: TradeUncheckedUpdateManyWithoutBuyerUserNestedInput
     sellTrade?: TradeUncheckedUpdateManyWithoutSellerUserNestedInput
+    StockBalance?: StockBalanceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -6563,8 +7958,11 @@ export namespace Prisma {
     endTime: Date | string
     noPrice?: EventCreatenoPriceInput | number[]
     yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
     orders?: OrderCreateNestedManyWithoutEventInput
     trades?: TradeCreateNestedManyWithoutEventInput
+    StockBalance?: StockBalanceCreateNestedManyWithoutEventInput
   }
 
   export type EventUncheckedCreateInput = {
@@ -6575,8 +7973,11 @@ export namespace Prisma {
     endTime: Date | string
     noPrice?: EventCreatenoPriceInput | number[]
     yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutEventInput
     trades?: TradeUncheckedCreateNestedManyWithoutEventInput
+    StockBalance?: StockBalanceUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventUpdateInput = {
@@ -6587,8 +7988,11 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     noPrice?: EventUpdatenoPriceInput | number[]
     yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutEventNestedInput
     trades?: TradeUpdateManyWithoutEventNestedInput
+    StockBalance?: StockBalanceUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateInput = {
@@ -6599,8 +8003,11 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     noPrice?: EventUpdatenoPriceInput | number[]
     yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutEventNestedInput
     trades?: TradeUncheckedUpdateManyWithoutEventNestedInput
+    StockBalance?: StockBalanceUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type EventCreateManyInput = {
@@ -6611,6 +8018,8 @@ export namespace Prisma {
     endTime: Date | string
     noPrice?: EventCreatenoPriceInput | number[]
     yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
   }
 
   export type EventUpdateManyMutationInput = {
@@ -6621,6 +8030,8 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     noPrice?: EventUpdatenoPriceInput | number[]
     yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type EventUncheckedUpdateManyInput = {
@@ -6631,6 +8042,8 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     noPrice?: EventUpdatenoPriceInput | number[]
     yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OrderCreateInput = {
@@ -6817,6 +8230,60 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StockBalanceCreateInput = {
+    id?: string
+    yesQty?: number
+    noQty?: number
+    user: UserCreateNestedOneWithoutStockBalanceInput
+    event: EventCreateNestedOneWithoutStockBalanceInput
+  }
+
+  export type StockBalanceUncheckedCreateInput = {
+    id?: string
+    userId: string
+    eventId: string
+    yesQty?: number
+    noQty?: number
+  }
+
+  export type StockBalanceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+    user?: UserUpdateOneRequiredWithoutStockBalanceNestedInput
+    event?: EventUpdateOneRequiredWithoutStockBalanceNestedInput
+  }
+
+  export type StockBalanceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type StockBalanceCreateManyInput = {
+    id?: string
+    userId: string
+    eventId: string
+    yesQty?: number
+    noQty?: number
+  }
+
+  export type StockBalanceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type StockBalanceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -6855,11 +8322,21 @@ export namespace Prisma {
     none?: TradeWhereInput
   }
 
+  export type StockBalanceListRelationFilter = {
+    every?: StockBalanceWhereInput
+    some?: StockBalanceWhereInput
+    none?: StockBalanceWhereInput
+  }
+
   export type OrderOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type TradeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StockBalanceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6953,6 +8430,11 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type EventCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -6961,6 +8443,8 @@ export namespace Prisma {
     endTime?: SortOrder
     noPrice?: SortOrder
     yesPrice?: SortOrder
+    winner?: SortOrder
+    payoutDone?: SortOrder
   }
 
   export type EventAvgOrderByAggregateInput = {
@@ -6974,6 +8458,8 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     endTime?: SortOrder
+    winner?: SortOrder
+    payoutDone?: SortOrder
   }
 
   export type EventMinOrderByAggregateInput = {
@@ -6982,6 +8468,8 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     endTime?: SortOrder
+    winner?: SortOrder
+    payoutDone?: SortOrder
   }
 
   export type EventSumOrderByAggregateInput = {
@@ -7001,6 +8489,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -7196,6 +8692,40 @@ export namespace Prisma {
     sellPrice?: SortOrder
   }
 
+  export type StockBalanceCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventId?: SortOrder
+    yesQty?: SortOrder
+    noQty?: SortOrder
+  }
+
+  export type StockBalanceAvgOrderByAggregateInput = {
+    yesQty?: SortOrder
+    noQty?: SortOrder
+  }
+
+  export type StockBalanceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventId?: SortOrder
+    yesQty?: SortOrder
+    noQty?: SortOrder
+  }
+
+  export type StockBalanceMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    eventId?: SortOrder
+    yesQty?: SortOrder
+    noQty?: SortOrder
+  }
+
+  export type StockBalanceSumOrderByAggregateInput = {
+    yesQty?: SortOrder
+    noQty?: SortOrder
+  }
+
   export type OrderCreateNestedManyWithoutUserInput = {
     create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
@@ -7217,6 +8747,13 @@ export namespace Prisma {
     connect?: TradeWhereUniqueInput | TradeWhereUniqueInput[]
   }
 
+  export type StockBalanceCreateNestedManyWithoutUserInput = {
+    create?: XOR<StockBalanceCreateWithoutUserInput, StockBalanceUncheckedCreateWithoutUserInput> | StockBalanceCreateWithoutUserInput[] | StockBalanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StockBalanceCreateOrConnectWithoutUserInput | StockBalanceCreateOrConnectWithoutUserInput[]
+    createMany?: StockBalanceCreateManyUserInputEnvelope
+    connect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
@@ -7236,6 +8773,13 @@ export namespace Prisma {
     connectOrCreate?: TradeCreateOrConnectWithoutSellerUserInput | TradeCreateOrConnectWithoutSellerUserInput[]
     createMany?: TradeCreateManySellerUserInputEnvelope
     connect?: TradeWhereUniqueInput | TradeWhereUniqueInput[]
+  }
+
+  export type StockBalanceUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<StockBalanceCreateWithoutUserInput, StockBalanceUncheckedCreateWithoutUserInput> | StockBalanceCreateWithoutUserInput[] | StockBalanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StockBalanceCreateOrConnectWithoutUserInput | StockBalanceCreateOrConnectWithoutUserInput[]
+    createMany?: StockBalanceCreateManyUserInputEnvelope
+    connect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -7292,6 +8836,20 @@ export namespace Prisma {
     deleteMany?: TradeScalarWhereInput | TradeScalarWhereInput[]
   }
 
+  export type StockBalanceUpdateManyWithoutUserNestedInput = {
+    create?: XOR<StockBalanceCreateWithoutUserInput, StockBalanceUncheckedCreateWithoutUserInput> | StockBalanceCreateWithoutUserInput[] | StockBalanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StockBalanceCreateOrConnectWithoutUserInput | StockBalanceCreateOrConnectWithoutUserInput[]
+    upsert?: StockBalanceUpsertWithWhereUniqueWithoutUserInput | StockBalanceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: StockBalanceCreateManyUserInputEnvelope
+    set?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    disconnect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    delete?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    connect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    update?: StockBalanceUpdateWithWhereUniqueWithoutUserInput | StockBalanceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: StockBalanceUpdateManyWithWhereWithoutUserInput | StockBalanceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: StockBalanceScalarWhereInput | StockBalanceScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
@@ -7334,6 +8892,20 @@ export namespace Prisma {
     deleteMany?: TradeScalarWhereInput | TradeScalarWhereInput[]
   }
 
+  export type StockBalanceUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<StockBalanceCreateWithoutUserInput, StockBalanceUncheckedCreateWithoutUserInput> | StockBalanceCreateWithoutUserInput[] | StockBalanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: StockBalanceCreateOrConnectWithoutUserInput | StockBalanceCreateOrConnectWithoutUserInput[]
+    upsert?: StockBalanceUpsertWithWhereUniqueWithoutUserInput | StockBalanceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: StockBalanceCreateManyUserInputEnvelope
+    set?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    disconnect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    delete?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    connect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    update?: StockBalanceUpdateWithWhereUniqueWithoutUserInput | StockBalanceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: StockBalanceUpdateManyWithWhereWithoutUserInput | StockBalanceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: StockBalanceScalarWhereInput | StockBalanceScalarWhereInput[]
+  }
+
   export type EventCreatenoPriceInput = {
     set: number[]
   }
@@ -7356,6 +8928,13 @@ export namespace Prisma {
     connect?: TradeWhereUniqueInput | TradeWhereUniqueInput[]
   }
 
+  export type StockBalanceCreateNestedManyWithoutEventInput = {
+    create?: XOR<StockBalanceCreateWithoutEventInput, StockBalanceUncheckedCreateWithoutEventInput> | StockBalanceCreateWithoutEventInput[] | StockBalanceUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: StockBalanceCreateOrConnectWithoutEventInput | StockBalanceCreateOrConnectWithoutEventInput[]
+    createMany?: StockBalanceCreateManyEventInputEnvelope
+    connect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutEventInput = {
     create?: XOR<OrderCreateWithoutEventInput, OrderUncheckedCreateWithoutEventInput> | OrderCreateWithoutEventInput[] | OrderUncheckedCreateWithoutEventInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutEventInput | OrderCreateOrConnectWithoutEventInput[]
@@ -7370,6 +8949,13 @@ export namespace Prisma {
     connect?: TradeWhereUniqueInput | TradeWhereUniqueInput[]
   }
 
+  export type StockBalanceUncheckedCreateNestedManyWithoutEventInput = {
+    create?: XOR<StockBalanceCreateWithoutEventInput, StockBalanceUncheckedCreateWithoutEventInput> | StockBalanceCreateWithoutEventInput[] | StockBalanceUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: StockBalanceCreateOrConnectWithoutEventInput | StockBalanceCreateOrConnectWithoutEventInput[]
+    createMany?: StockBalanceCreateManyEventInputEnvelope
+    connect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -7382,6 +8968,10 @@ export namespace Prisma {
   export type EventUpdateyesPriceInput = {
     set?: number[]
     push?: number | number[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type OrderUpdateManyWithoutEventNestedInput = {
@@ -7412,6 +9002,20 @@ export namespace Prisma {
     deleteMany?: TradeScalarWhereInput | TradeScalarWhereInput[]
   }
 
+  export type StockBalanceUpdateManyWithoutEventNestedInput = {
+    create?: XOR<StockBalanceCreateWithoutEventInput, StockBalanceUncheckedCreateWithoutEventInput> | StockBalanceCreateWithoutEventInput[] | StockBalanceUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: StockBalanceCreateOrConnectWithoutEventInput | StockBalanceCreateOrConnectWithoutEventInput[]
+    upsert?: StockBalanceUpsertWithWhereUniqueWithoutEventInput | StockBalanceUpsertWithWhereUniqueWithoutEventInput[]
+    createMany?: StockBalanceCreateManyEventInputEnvelope
+    set?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    disconnect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    delete?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    connect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    update?: StockBalanceUpdateWithWhereUniqueWithoutEventInput | StockBalanceUpdateWithWhereUniqueWithoutEventInput[]
+    updateMany?: StockBalanceUpdateManyWithWhereWithoutEventInput | StockBalanceUpdateManyWithWhereWithoutEventInput[]
+    deleteMany?: StockBalanceScalarWhereInput | StockBalanceScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutEventNestedInput = {
     create?: XOR<OrderCreateWithoutEventInput, OrderUncheckedCreateWithoutEventInput> | OrderCreateWithoutEventInput[] | OrderUncheckedCreateWithoutEventInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutEventInput | OrderCreateOrConnectWithoutEventInput[]
@@ -7438,6 +9042,20 @@ export namespace Prisma {
     update?: TradeUpdateWithWhereUniqueWithoutEventInput | TradeUpdateWithWhereUniqueWithoutEventInput[]
     updateMany?: TradeUpdateManyWithWhereWithoutEventInput | TradeUpdateManyWithWhereWithoutEventInput[]
     deleteMany?: TradeScalarWhereInput | TradeScalarWhereInput[]
+  }
+
+  export type StockBalanceUncheckedUpdateManyWithoutEventNestedInput = {
+    create?: XOR<StockBalanceCreateWithoutEventInput, StockBalanceUncheckedCreateWithoutEventInput> | StockBalanceCreateWithoutEventInput[] | StockBalanceUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: StockBalanceCreateOrConnectWithoutEventInput | StockBalanceCreateOrConnectWithoutEventInput[]
+    upsert?: StockBalanceUpsertWithWhereUniqueWithoutEventInput | StockBalanceUpsertWithWhereUniqueWithoutEventInput[]
+    createMany?: StockBalanceCreateManyEventInputEnvelope
+    set?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    disconnect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    delete?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    connect?: StockBalanceWhereUniqueInput | StockBalanceWhereUniqueInput[]
+    update?: StockBalanceUpdateWithWhereUniqueWithoutEventInput | StockBalanceUpdateWithWhereUniqueWithoutEventInput[]
+    updateMany?: StockBalanceUpdateManyWithWhereWithoutEventInput | StockBalanceUpdateManyWithWhereWithoutEventInput[]
+    deleteMany?: StockBalanceScalarWhereInput | StockBalanceScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutOrdersInput = {
@@ -7530,6 +9148,34 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSellTradeInput, UserUpdateWithoutSellTradeInput>, UserUncheckedUpdateWithoutSellTradeInput>
   }
 
+  export type UserCreateNestedOneWithoutStockBalanceInput = {
+    create?: XOR<UserCreateWithoutStockBalanceInput, UserUncheckedCreateWithoutStockBalanceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStockBalanceInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EventCreateNestedOneWithoutStockBalanceInput = {
+    create?: XOR<EventCreateWithoutStockBalanceInput, EventUncheckedCreateWithoutStockBalanceInput>
+    connectOrCreate?: EventCreateOrConnectWithoutStockBalanceInput
+    connect?: EventWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutStockBalanceNestedInput = {
+    create?: XOR<UserCreateWithoutStockBalanceInput, UserUncheckedCreateWithoutStockBalanceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStockBalanceInput
+    upsert?: UserUpsertWithoutStockBalanceInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStockBalanceInput, UserUpdateWithoutStockBalanceInput>, UserUncheckedUpdateWithoutStockBalanceInput>
+  }
+
+  export type EventUpdateOneRequiredWithoutStockBalanceNestedInput = {
+    create?: XOR<EventCreateWithoutStockBalanceInput, EventUncheckedCreateWithoutStockBalanceInput>
+    connectOrCreate?: EventCreateOrConnectWithoutStockBalanceInput
+    upsert?: EventUpsertWithoutStockBalanceInput
+    connect?: EventWhereUniqueInput
+    update?: XOR<XOR<EventUpdateToOneWithWhereWithoutStockBalanceInput, EventUpdateWithoutStockBalanceInput>, EventUncheckedUpdateWithoutStockBalanceInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -7610,6 +9256,11 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -7622,6 +9273,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumTradeSideFilter<$PrismaModel = never> = {
@@ -7799,6 +9458,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StockBalanceCreateWithoutUserInput = {
+    id?: string
+    yesQty?: number
+    noQty?: number
+    event: EventCreateNestedOneWithoutStockBalanceInput
+  }
+
+  export type StockBalanceUncheckedCreateWithoutUserInput = {
+    id?: string
+    eventId: string
+    yesQty?: number
+    noQty?: number
+  }
+
+  export type StockBalanceCreateOrConnectWithoutUserInput = {
+    where: StockBalanceWhereUniqueInput
+    create: XOR<StockBalanceCreateWithoutUserInput, StockBalanceUncheckedCreateWithoutUserInput>
+  }
+
+  export type StockBalanceCreateManyUserInputEnvelope = {
+    data: StockBalanceCreateManyUserInput | StockBalanceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderUpsertWithWhereUniqueWithoutUserInput = {
     where: OrderWhereUniqueInput
     update: XOR<OrderUpdateWithoutUserInput, OrderUncheckedUpdateWithoutUserInput>
@@ -7880,6 +9563,33 @@ export namespace Prisma {
     data: XOR<TradeUpdateManyMutationInput, TradeUncheckedUpdateManyWithoutSellerUserInput>
   }
 
+  export type StockBalanceUpsertWithWhereUniqueWithoutUserInput = {
+    where: StockBalanceWhereUniqueInput
+    update: XOR<StockBalanceUpdateWithoutUserInput, StockBalanceUncheckedUpdateWithoutUserInput>
+    create: XOR<StockBalanceCreateWithoutUserInput, StockBalanceUncheckedCreateWithoutUserInput>
+  }
+
+  export type StockBalanceUpdateWithWhereUniqueWithoutUserInput = {
+    where: StockBalanceWhereUniqueInput
+    data: XOR<StockBalanceUpdateWithoutUserInput, StockBalanceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type StockBalanceUpdateManyWithWhereWithoutUserInput = {
+    where: StockBalanceScalarWhereInput
+    data: XOR<StockBalanceUpdateManyMutationInput, StockBalanceUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type StockBalanceScalarWhereInput = {
+    AND?: StockBalanceScalarWhereInput | StockBalanceScalarWhereInput[]
+    OR?: StockBalanceScalarWhereInput[]
+    NOT?: StockBalanceScalarWhereInput | StockBalanceScalarWhereInput[]
+    id?: StringFilter<"StockBalance"> | string
+    userId?: StringFilter<"StockBalance"> | string
+    eventId?: StringFilter<"StockBalance"> | string
+    yesQty?: IntFilter<"StockBalance"> | number
+    noQty?: IntFilter<"StockBalance"> | number
+  }
+
   export type OrderCreateWithoutEventInput = {
     id?: string
     quantity: number
@@ -7950,6 +9660,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StockBalanceCreateWithoutEventInput = {
+    id?: string
+    yesQty?: number
+    noQty?: number
+    user: UserCreateNestedOneWithoutStockBalanceInput
+  }
+
+  export type StockBalanceUncheckedCreateWithoutEventInput = {
+    id?: string
+    userId: string
+    yesQty?: number
+    noQty?: number
+  }
+
+  export type StockBalanceCreateOrConnectWithoutEventInput = {
+    where: StockBalanceWhereUniqueInput
+    create: XOR<StockBalanceCreateWithoutEventInput, StockBalanceUncheckedCreateWithoutEventInput>
+  }
+
+  export type StockBalanceCreateManyEventInputEnvelope = {
+    data: StockBalanceCreateManyEventInput | StockBalanceCreateManyEventInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderUpsertWithWhereUniqueWithoutEventInput = {
     where: OrderWhereUniqueInput
     update: XOR<OrderUpdateWithoutEventInput, OrderUncheckedUpdateWithoutEventInput>
@@ -7982,6 +9716,22 @@ export namespace Prisma {
     data: XOR<TradeUpdateManyMutationInput, TradeUncheckedUpdateManyWithoutEventInput>
   }
 
+  export type StockBalanceUpsertWithWhereUniqueWithoutEventInput = {
+    where: StockBalanceWhereUniqueInput
+    update: XOR<StockBalanceUpdateWithoutEventInput, StockBalanceUncheckedUpdateWithoutEventInput>
+    create: XOR<StockBalanceCreateWithoutEventInput, StockBalanceUncheckedCreateWithoutEventInput>
+  }
+
+  export type StockBalanceUpdateWithWhereUniqueWithoutEventInput = {
+    where: StockBalanceWhereUniqueInput
+    data: XOR<StockBalanceUpdateWithoutEventInput, StockBalanceUncheckedUpdateWithoutEventInput>
+  }
+
+  export type StockBalanceUpdateManyWithWhereWithoutEventInput = {
+    where: StockBalanceScalarWhereInput
+    data: XOR<StockBalanceUpdateManyMutationInput, StockBalanceUncheckedUpdateManyWithoutEventInput>
+  }
+
   export type UserCreateWithoutOrdersInput = {
     id?: string
     email: string
@@ -7991,6 +9741,7 @@ export namespace Prisma {
     lockedBalance: number
     boughtTrade?: TradeCreateNestedManyWithoutBuyerUserInput
     sellTrade?: TradeCreateNestedManyWithoutSellerUserInput
+    StockBalance?: StockBalanceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -8002,6 +9753,7 @@ export namespace Prisma {
     lockedBalance: number
     boughtTrade?: TradeUncheckedCreateNestedManyWithoutBuyerUserInput
     sellTrade?: TradeUncheckedCreateNestedManyWithoutSellerUserInput
+    StockBalance?: StockBalanceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -8017,7 +9769,10 @@ export namespace Prisma {
     endTime: Date | string
     noPrice?: EventCreatenoPriceInput | number[]
     yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
     trades?: TradeCreateNestedManyWithoutEventInput
+    StockBalance?: StockBalanceCreateNestedManyWithoutEventInput
   }
 
   export type EventUncheckedCreateWithoutOrdersInput = {
@@ -8028,7 +9783,10 @@ export namespace Prisma {
     endTime: Date | string
     noPrice?: EventCreatenoPriceInput | number[]
     yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
     trades?: TradeUncheckedCreateNestedManyWithoutEventInput
+    StockBalance?: StockBalanceUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventCreateOrConnectWithoutOrdersInput = {
@@ -8056,6 +9814,7 @@ export namespace Prisma {
     lockedBalance?: FloatFieldUpdateOperationsInput | number
     boughtTrade?: TradeUpdateManyWithoutBuyerUserNestedInput
     sellTrade?: TradeUpdateManyWithoutSellerUserNestedInput
+    StockBalance?: StockBalanceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -8067,6 +9826,7 @@ export namespace Prisma {
     lockedBalance?: FloatFieldUpdateOperationsInput | number
     boughtTrade?: TradeUncheckedUpdateManyWithoutBuyerUserNestedInput
     sellTrade?: TradeUncheckedUpdateManyWithoutSellerUserNestedInput
+    StockBalance?: StockBalanceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventUpsertWithoutOrdersInput = {
@@ -8088,7 +9848,10 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     noPrice?: EventUpdatenoPriceInput | number[]
     yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
     trades?: TradeUpdateManyWithoutEventNestedInput
+    StockBalance?: StockBalanceUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateWithoutOrdersInput = {
@@ -8099,7 +9862,10 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     noPrice?: EventUpdatenoPriceInput | number[]
     yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
     trades?: TradeUncheckedUpdateManyWithoutEventNestedInput
+    StockBalance?: StockBalanceUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type EventCreateWithoutTradesInput = {
@@ -8110,7 +9876,10 @@ export namespace Prisma {
     endTime: Date | string
     noPrice?: EventCreatenoPriceInput | number[]
     yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
     orders?: OrderCreateNestedManyWithoutEventInput
+    StockBalance?: StockBalanceCreateNestedManyWithoutEventInput
   }
 
   export type EventUncheckedCreateWithoutTradesInput = {
@@ -8121,7 +9890,10 @@ export namespace Prisma {
     endTime: Date | string
     noPrice?: EventCreatenoPriceInput | number[]
     yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutEventInput
+    StockBalance?: StockBalanceUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventCreateOrConnectWithoutTradesInput = {
@@ -8138,6 +9910,7 @@ export namespace Prisma {
     lockedBalance: number
     orders?: OrderCreateNestedManyWithoutUserInput
     sellTrade?: TradeCreateNestedManyWithoutSellerUserInput
+    StockBalance?: StockBalanceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBoughtTradeInput = {
@@ -8149,6 +9922,7 @@ export namespace Prisma {
     lockedBalance: number
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     sellTrade?: TradeUncheckedCreateNestedManyWithoutSellerUserInput
+    StockBalance?: StockBalanceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBoughtTradeInput = {
@@ -8165,6 +9939,7 @@ export namespace Prisma {
     lockedBalance: number
     orders?: OrderCreateNestedManyWithoutUserInput
     boughtTrade?: TradeCreateNestedManyWithoutBuyerUserInput
+    StockBalance?: StockBalanceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSellTradeInput = {
@@ -8176,6 +9951,7 @@ export namespace Prisma {
     lockedBalance: number
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     boughtTrade?: TradeUncheckedCreateNestedManyWithoutBuyerUserInput
+    StockBalance?: StockBalanceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSellTradeInput = {
@@ -8202,7 +9978,10 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     noPrice?: EventUpdatenoPriceInput | number[]
     yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutEventNestedInput
+    StockBalance?: StockBalanceUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateWithoutTradesInput = {
@@ -8213,7 +9992,10 @@ export namespace Prisma {
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
     noPrice?: EventUpdatenoPriceInput | number[]
     yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutEventNestedInput
+    StockBalance?: StockBalanceUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type UserUpsertWithoutBoughtTradeInput = {
@@ -8236,6 +10018,7 @@ export namespace Prisma {
     lockedBalance?: FloatFieldUpdateOperationsInput | number
     orders?: OrderUpdateManyWithoutUserNestedInput
     sellTrade?: TradeUpdateManyWithoutSellerUserNestedInput
+    StockBalance?: StockBalanceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBoughtTradeInput = {
@@ -8247,6 +10030,7 @@ export namespace Prisma {
     lockedBalance?: FloatFieldUpdateOperationsInput | number
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     sellTrade?: TradeUncheckedUpdateManyWithoutSellerUserNestedInput
+    StockBalance?: StockBalanceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutSellTradeInput = {
@@ -8269,6 +10053,7 @@ export namespace Prisma {
     lockedBalance?: FloatFieldUpdateOperationsInput | number
     orders?: OrderUpdateManyWithoutUserNestedInput
     boughtTrade?: TradeUpdateManyWithoutBuyerUserNestedInput
+    StockBalance?: StockBalanceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSellTradeInput = {
@@ -8280,6 +10065,143 @@ export namespace Prisma {
     lockedBalance?: FloatFieldUpdateOperationsInput | number
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     boughtTrade?: TradeUncheckedUpdateManyWithoutBuyerUserNestedInput
+    StockBalance?: StockBalanceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutStockBalanceInput = {
+    id?: string
+    email: string
+    password: string
+    provider: string
+    balance: number
+    lockedBalance: number
+    orders?: OrderCreateNestedManyWithoutUserInput
+    boughtTrade?: TradeCreateNestedManyWithoutBuyerUserInput
+    sellTrade?: TradeCreateNestedManyWithoutSellerUserInput
+  }
+
+  export type UserUncheckedCreateWithoutStockBalanceInput = {
+    id?: string
+    email: string
+    password: string
+    provider: string
+    balance: number
+    lockedBalance: number
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    boughtTrade?: TradeUncheckedCreateNestedManyWithoutBuyerUserInput
+    sellTrade?: TradeUncheckedCreateNestedManyWithoutSellerUserInput
+  }
+
+  export type UserCreateOrConnectWithoutStockBalanceInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStockBalanceInput, UserUncheckedCreateWithoutStockBalanceInput>
+  }
+
+  export type EventCreateWithoutStockBalanceInput = {
+    id?: string
+    title: string
+    description: string
+    createdAt?: Date | string
+    endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
+    orders?: OrderCreateNestedManyWithoutEventInput
+    trades?: TradeCreateNestedManyWithoutEventInput
+  }
+
+  export type EventUncheckedCreateWithoutStockBalanceInput = {
+    id?: string
+    title: string
+    description: string
+    createdAt?: Date | string
+    endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
+    winner?: string
+    payoutDone?: boolean
+    orders?: OrderUncheckedCreateNestedManyWithoutEventInput
+    trades?: TradeUncheckedCreateNestedManyWithoutEventInput
+  }
+
+  export type EventCreateOrConnectWithoutStockBalanceInput = {
+    where: EventWhereUniqueInput
+    create: XOR<EventCreateWithoutStockBalanceInput, EventUncheckedCreateWithoutStockBalanceInput>
+  }
+
+  export type UserUpsertWithoutStockBalanceInput = {
+    update: XOR<UserUpdateWithoutStockBalanceInput, UserUncheckedUpdateWithoutStockBalanceInput>
+    create: XOR<UserCreateWithoutStockBalanceInput, UserUncheckedCreateWithoutStockBalanceInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStockBalanceInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStockBalanceInput, UserUncheckedUpdateWithoutStockBalanceInput>
+  }
+
+  export type UserUpdateWithoutStockBalanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    lockedBalance?: FloatFieldUpdateOperationsInput | number
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    boughtTrade?: TradeUpdateManyWithoutBuyerUserNestedInput
+    sellTrade?: TradeUpdateManyWithoutSellerUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStockBalanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    lockedBalance?: FloatFieldUpdateOperationsInput | number
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    boughtTrade?: TradeUncheckedUpdateManyWithoutBuyerUserNestedInput
+    sellTrade?: TradeUncheckedUpdateManyWithoutSellerUserNestedInput
+  }
+
+  export type EventUpsertWithoutStockBalanceInput = {
+    update: XOR<EventUpdateWithoutStockBalanceInput, EventUncheckedUpdateWithoutStockBalanceInput>
+    create: XOR<EventCreateWithoutStockBalanceInput, EventUncheckedCreateWithoutStockBalanceInput>
+    where?: EventWhereInput
+  }
+
+  export type EventUpdateToOneWithWhereWithoutStockBalanceInput = {
+    where?: EventWhereInput
+    data: XOR<EventUpdateWithoutStockBalanceInput, EventUncheckedUpdateWithoutStockBalanceInput>
+  }
+
+  export type EventUpdateWithoutStockBalanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
+    orders?: OrderUpdateManyWithoutEventNestedInput
+    trades?: TradeUpdateManyWithoutEventNestedInput
+  }
+
+  export type EventUncheckedUpdateWithoutStockBalanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
+    winner?: StringFieldUpdateOperationsInput | string
+    payoutDone?: BoolFieldUpdateOperationsInput | boolean
+    orders?: OrderUncheckedUpdateManyWithoutEventNestedInput
+    trades?: TradeUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type OrderCreateManyUserInput = {
@@ -8319,6 +10241,13 @@ export namespace Prisma {
     buyerOrderId: string
     sellerOrderId: string
     createdAt?: Date | string
+  }
+
+  export type StockBalanceCreateManyUserInput = {
+    id?: string
+    eventId: string
+    yesQty?: number
+    noQty?: number
   }
 
   export type OrderUpdateWithoutUserInput = {
@@ -8438,6 +10367,27 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StockBalanceUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+    event?: EventUpdateOneRequiredWithoutStockBalanceNestedInput
+  }
+
+  export type StockBalanceUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type StockBalanceUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+  }
+
   export type OrderCreateManyEventInput = {
     id?: string
     userId: string
@@ -8461,6 +10411,13 @@ export namespace Prisma {
     buyerOrderId: string
     sellerOrderId: string
     createdAt?: Date | string
+  }
+
+  export type StockBalanceCreateManyEventInput = {
+    id?: string
+    userId: string
+    yesQty?: number
+    noQty?: number
   }
 
   export type OrderUpdateWithoutEventInput = {
@@ -8536,6 +10493,27 @@ export namespace Prisma {
     buyerOrderId?: StringFieldUpdateOperationsInput | string
     sellerOrderId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockBalanceUpdateWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+    user?: UserUpdateOneRequiredWithoutStockBalanceNestedInput
+  }
+
+  export type StockBalanceUncheckedUpdateWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type StockBalanceUncheckedUpdateManyWithoutEventInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    yesQty?: IntFieldUpdateOperationsInput | number
+    noQty?: IntFieldUpdateOperationsInput | number
   }
 
 
