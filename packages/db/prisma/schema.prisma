@@ -76,6 +76,8 @@ model StockBalance {
   event   Event  @relation(fields: [eventId], references: [id])
   yesQty  Int    @default(0)
   noQty   Int    @default(0)
+
+  @@unique([userId, eventId])
 }
 
 enum TradeSide {

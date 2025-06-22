@@ -47,134 +47,146 @@ async function startArchiever() {
             console.log("parsedData", parsedData);
 
             if (message.type == "order_creation") {
-              const order = await prisma.order.upsert({
-                where: {
-                  id: parsedData.orderId,
-                },
-                update: {
-                  userId: parsedData.userId,
-                  eventId: parsedData.eventId,
-                  side: parsedData.side,
-                  price: parsedData.price,
-                  quantity: parsedData.quantity,
-                  status: parsedData.status,
-                  createdAt: new Date(parsedData.timestamp),
-                  type: parsedData.type,
-                },
-                create: {
-                  id: parsedData.orderId,
-                  userId: parsedData.userId,
-                  eventId: parsedData.eventId,
-                  side: parsedData.side,
-                  price: parsedData.price,
-                  quantity: parsedData.quantity,
-                  status: parsedData.status,
-                  createdAt: new Date(parsedData.timestamp),
-                  type: parsedData.type,
-                },
-              });
-              console.log("order saved", order);
+              try {
+                const order = await prisma.order.upsert({
+                  where: {
+                    id: parsedData.orderId,
+                  },
+                  update: {
+                    userId: parsedData.userId,
+                    eventId: parsedData.eventId,
+                    side: parsedData.side,
+                    price: parsedData.price,
+                    quantity: parsedData.quantity,
+                    status: parsedData.status,
+                    createdAt: new Date(parsedData.timestamp),
+                    type: parsedData.type,
+                  },
+                  create: {
+                    id: parsedData.orderId,
+                    userId: parsedData.userId,
+                    eventId: parsedData.eventId,
+                    side: parsedData.side,
+                    price: parsedData.price,
+                    quantity: parsedData.quantity,
+                    status: parsedData.status,
+                    createdAt: new Date(parsedData.timestamp),
+                    type: parsedData.type,
+                  },
+                });
+                console.log("order saved", order);
+              } catch (err) {
+                console.log("error: ", err);
+              }
             } else if (
               message.type == "trade" ||
               message.type == "exit_trade"
             ) {
-              await prisma.$transaction(async (tx) => {
-                const trade = await tx.trade.upsert({
-                  where: {
-                    id: parsedData.tradeId,
-                  },
-                  update: {
-                    buyerId: parsedData.buyerId,
-                    buyerOrderId: parsedData.buyOrderId,
-                    buyPrice: parsedData.buyPrice,
-                    sellerId: parsedData.sellerId,
-                    sellerOrderId: parsedData.sellOrderId,
-                    sellPrice: parsedData.sellPrice,
-                    buyQty: parsedData.buyQuantity,
-                    sellQty: parsedData.sellQuantity,
-                    eventId: parsedData.eventId,
-                    createdAt: new Date(parsedData.timestamp),
-                  },
-                  create: {
-                    id: parsedData.tradeId,
-                    buyerId: parsedData.buyerId,
-                    buyerOrderId: parsedData.buyOrderId,
-                    buyPrice: parsedData.buyPrice,
-                    sellerId: parsedData.sellerId,
-                    side: parsedData.side,
-                    sellerOrderId: parsedData.sellOrderId,
-                    sellPrice: parsedData.sellPrice,
-                    buyQty: parsedData.buyQuantity,
-                    sellQty: parsedData.sellQuantity,
-                    eventId: parsedData.eventId,
-                    createdAt: new Date(parsedData.timestamp),
-                  },
-                });
-                console.log("trade saved", trade);
-                const yesPrice =
-                  parsedData.side === "YES"
-                    ? parsedData.sellPrice
-                    : 10 - parsedData.sellPrice;
-                const noPrice = 10 - yesPrice;
-                console.log("yesPrice", yesPrice);
-                console.log("noPrice", noPrice);
-                await tx.event.update({
-                  where: {
-                    id: parsedData.eventId,
-                  },
-                  data: {
-                    yesPrice: {
-                      push: yesPrice,
+              try {
+                await prisma.$transaction(async (tx) => {
+                  const trade = await tx.trade.upsert({
+                    where: {
+                      id: parsedData.tradeId,
                     },
-                    noPrice: {
-                      push: noPrice,
+                    update: {
+                      buyerId: parsedData.buyerId,
+                      buyerOrderId: parsedData.buyOrderId,
+                      buyPrice: parsedData.buyPrice,
+                      sellerId: parsedData.sellerId,
+                      sellerOrderId: parsedData.sellOrderId,
+                      sellPrice: parsedData.sellPrice,
+                      buyQty: parsedData.buyQuantity,
+                      sellQty: parsedData.sellQuantity,
+                      eventId: parsedData.eventId,
+                      createdAt: new Date(parsedData.timestamp),
                     },
-                  },
+                    create: {
+                      id: parsedData.tradeId,
+                      buyerId: parsedData.buyerId,
+                      buyerOrderId: parsedData.buyOrderId,
+                      buyPrice: parsedData.buyPrice,
+                      sellerId: parsedData.sellerId,
+                      side: parsedData.side,
+                      sellerOrderId: parsedData.sellOrderId,
+                      sellPrice: parsedData.sellPrice,
+                      buyQty: parsedData.buyQuantity,
+                      sellQty: parsedData.sellQuantity,
+                      eventId: parsedData.eventId,
+                      createdAt: new Date(parsedData.timestamp),
+                    },
+                  });
+                  console.log("trade saved", trade);
+                  const yesPrice =
+                    parsedData.side === "YES"
+                      ? parsedData.sellPrice
+                      : 10 - parsedData.sellPrice;
+                  const noPrice = 10 - yesPrice;
+                  console.log("yesPrice", yesPrice);
+                  console.log("noPrice", noPrice);
+                  await tx.event.update({
+                    where: {
+                      id: parsedData.eventId,
+                    },
+                    data: {
+                      yesPrice: {
+                        push: yesPrice,
+                      },
+                      noPrice: {
+                        push: noPrice,
+                      },
+                    },
+                  });
                 });
-              });
+              } catch (err) {
+                console.log("Error: ", err);
+              }
             } else if (message.type == "pseudo_order_creation") {
-              await prisma.$transaction(async (tx) => {
-                const originalOrder = await tx.order.findUnique({
-                  where: {
-                    id: parsedData.orderId,
-                  },
-                });
-                if (!originalOrder) {
-                  return;
-                }
-                const pseudoOrder = await tx.order.upsert({
-                  where: {
-                    id: parsedData.pseudoOrderId,
-                  },
-                  update: {
-                    id: parsedData.pseudoOrderId,
-                    userId: originalOrder.userId,
-                    eventId: originalOrder.eventId,
-                    side: parsedData.side,
-                    price: originalOrder.price,
-                    quantity: parsedData.remainingQty,
-                    createdAt: new Date(originalOrder.createdAt),
-                    type: "SELL",
-                  },
-                  create: {
-                    ...originalOrder,
-                    id: parsedData.pseudoOrderId,
-                    side: parsedData.side,
-                    type: "SELL",
-                    quantity: parsedData.remainingQty,
-                  },
-                });
-                await tx.order.update({
-                  where: {
-                    id: parsedData.orderId,
-                  },
-                  data: {
-                    quantity: {
-                      decrement: parsedData.remainingQty,
+              try {
+                await prisma.$transaction(async (tx) => {
+                  const originalOrder = await tx.order.findUnique({
+                    where: {
+                      id: parsedData.orderId,
                     },
-                  },
+                  });
+                  if (!originalOrder) {
+                    return;
+                  }
+                  const pseudoOrder = await tx.order.upsert({
+                    where: {
+                      id: parsedData.pseudoOrderId,
+                    },
+                    update: {
+                      id: parsedData.pseudoOrderId,
+                      userId: originalOrder.userId,
+                      eventId: originalOrder.eventId,
+                      side: parsedData.side,
+                      price: originalOrder.price,
+                      quantity: parsedData.remainingQty,
+                      createdAt: new Date(originalOrder.createdAt),
+                      type: "SELL",
+                    },
+                    create: {
+                      ...originalOrder,
+                      id: parsedData.pseudoOrderId,
+                      side: parsedData.side,
+                      type: "SELL",
+                      quantity: parsedData.remainingQty,
+                    },
+                  });
+                  await tx.order.update({
+                    where: {
+                      id: parsedData.orderId,
+                    },
+                    data: {
+                      quantity: {
+                        decrement: parsedData.remainingQty,
+                      },
+                    },
+                  });
                 });
-              });
+              } catch (err) {
+                console.log("Error: ", err);
+              }
             } else if (message.type == "order_matched") {
               try {
                 await prisma.order.update({
@@ -201,6 +213,29 @@ async function startArchiever() {
                 });
               } catch (err) {
                 console.log("error in order_executed", err);
+              }
+            } else if (message.type == "update_stock_balance") {
+              try {
+                await prisma.stockBalance.upsert({
+                  where: {
+                    userId_eventId: {
+                      userId: parsedData.userId,
+                      eventId: parsedData.eventId,
+                    },
+                  },
+                  update: {
+                    yesQty: parsedData.yesQty,
+                    noQty: parsedData.noQty,
+                  },
+                  create: {
+                    userId: parsedData.userId,
+                    eventId: parsedData.eventId,
+                    yesQty: parsedData.yesQty,
+                    noQty: parsedData.noQty,
+                  },
+                });
+              } catch (err) {
+                console.log("Error: ", err);
               }
             }
 

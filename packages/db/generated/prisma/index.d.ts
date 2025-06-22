@@ -7836,6 +7836,7 @@ export namespace Prisma {
 
   export type StockBalanceWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    userId_eventId?: StockBalanceUserIdEventIdCompoundUniqueInput
     AND?: StockBalanceWhereInput | StockBalanceWhereInput[]
     OR?: StockBalanceWhereInput[]
     NOT?: StockBalanceWhereInput | StockBalanceWhereInput[]
@@ -7845,7 +7846,7 @@ export namespace Prisma {
     noQty?: IntFilter<"StockBalance"> | number
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     event?: XOR<EventScalarRelationFilter, EventWhereInput>
-  }, "id">
+  }, "id" | "userId_eventId">
 
   export type StockBalanceOrderByWithAggregationInput = {
     id?: SortOrder
@@ -8690,6 +8691,11 @@ export namespace Prisma {
     buyQty?: SortOrder
     buyPrice?: SortOrder
     sellPrice?: SortOrder
+  }
+
+  export type StockBalanceUserIdEventIdCompoundUniqueInput = {
+    userId: string
+    eventId: string
   }
 
   export type StockBalanceCountOrderByAggregateInput = {

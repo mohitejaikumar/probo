@@ -352,6 +352,18 @@ export const initiateOrderLogic = async (
                 sellerTradeOty;
             }
           }
+          await BroadcastChannel("update_stock_balance", {
+            userId,
+            eventId,
+            yesQty: InMemoryStockBalance[eventId]![userId]!.yesQty,
+            noQty: InMemoryStockBalance[eventId]![userId]!.noQty,
+          });
+          await BroadcastChannel("update_stock_balance", {
+            userId: sellerOrder.userId,
+            eventId,
+            yesQty: InMemoryStockBalance[eventId]![sellerOrder.userId]!.yesQty,
+            noQty: InMemoryStockBalance[eventId]![sellerOrder.userId]!.noQty,
+          });
 
           // remove the order if it is finished
           if (sellerOrder.quantity == 0) {
@@ -526,6 +538,18 @@ export async function exit(
             InMemoryStockBalance[eventId]![sellerOrder.userId]!.yesQty -=
               sellerQuantity;
           }
+          await BroadcastChannel("update_stock_balance", {
+            userId,
+            eventId,
+            yesQty: InMemoryStockBalance[eventId]![userId]!.yesQty,
+            noQty: InMemoryStockBalance[eventId]![userId]!.noQty,
+          });
+          await BroadcastChannel("update_stock_balance", {
+            userId: sellerOrder.userId,
+            eventId,
+            yesQty: InMemoryStockBalance[eventId]![sellerOrder.userId]!.yesQty,
+            noQty: InMemoryStockBalance[eventId]![sellerOrder.userId]!.noQty,
+          });
 
           if (sellerOrder.quantity == 0) {
             InMemoryOrders[sellerOrderId]!.status = "EXECUTED";
