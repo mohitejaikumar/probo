@@ -2455,8 +2455,20 @@ export namespace Prisma {
 
   export type AggregateEvent = {
     _count: EventCountAggregateOutputType | null
+    _avg: EventAvgAggregateOutputType | null
+    _sum: EventSumAggregateOutputType | null
     _min: EventMinAggregateOutputType | null
     _max: EventMaxAggregateOutputType | null
+  }
+
+  export type EventAvgAggregateOutputType = {
+    noPrice: number | null
+    yesPrice: number | null
+  }
+
+  export type EventSumAggregateOutputType = {
+    noPrice: number[]
+    yesPrice: number[]
   }
 
   export type EventMinAggregateOutputType = {
@@ -2481,9 +2493,21 @@ export namespace Prisma {
     description: number
     createdAt: number
     endTime: number
+    noPrice: number
+    yesPrice: number
     _all: number
   }
 
+
+  export type EventAvgAggregateInputType = {
+    noPrice?: true
+    yesPrice?: true
+  }
+
+  export type EventSumAggregateInputType = {
+    noPrice?: true
+    yesPrice?: true
+  }
 
   export type EventMinAggregateInputType = {
     id?: true
@@ -2507,6 +2531,8 @@ export namespace Prisma {
     description?: true
     createdAt?: true
     endTime?: true
+    noPrice?: true
+    yesPrice?: true
     _all?: true
   }
 
@@ -2548,6 +2574,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: EventAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EventSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: EventMinAggregateInputType
@@ -2578,6 +2616,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: EventCountAggregateInputType | true
+    _avg?: EventAvgAggregateInputType
+    _sum?: EventSumAggregateInputType
     _min?: EventMinAggregateInputType
     _max?: EventMaxAggregateInputType
   }
@@ -2588,7 +2628,11 @@ export namespace Prisma {
     description: string
     createdAt: Date
     endTime: Date
+    noPrice: number[]
+    yesPrice: number[]
     _count: EventCountAggregateOutputType | null
+    _avg: EventAvgAggregateOutputType | null
+    _sum: EventSumAggregateOutputType | null
     _min: EventMinAggregateOutputType | null
     _max: EventMaxAggregateOutputType | null
   }
@@ -2613,6 +2657,8 @@ export namespace Prisma {
     description?: boolean
     createdAt?: boolean
     endTime?: boolean
+    noPrice?: boolean
+    yesPrice?: boolean
     orders?: boolean | Event$ordersArgs<ExtArgs>
     trades?: boolean | Event$tradesArgs<ExtArgs>
     _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
@@ -2624,6 +2670,8 @@ export namespace Prisma {
     description?: boolean
     createdAt?: boolean
     endTime?: boolean
+    noPrice?: boolean
+    yesPrice?: boolean
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2632,6 +2680,8 @@ export namespace Prisma {
     description?: boolean
     createdAt?: boolean
     endTime?: boolean
+    noPrice?: boolean
+    yesPrice?: boolean
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectScalar = {
@@ -2640,9 +2690,11 @@ export namespace Prisma {
     description?: boolean
     createdAt?: boolean
     endTime?: boolean
+    noPrice?: boolean
+    yesPrice?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "createdAt" | "endTime", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "createdAt" | "endTime" | "noPrice" | "yesPrice", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Event$ordersArgs<ExtArgs>
     trades?: boolean | Event$tradesArgs<ExtArgs>
@@ -2663,6 +2715,8 @@ export namespace Prisma {
       description: string
       createdAt: Date
       endTime: Date
+      noPrice: number[]
+      yesPrice: number[]
     }, ExtArgs["result"]["event"]>
     composites: {}
   }
@@ -3093,6 +3147,8 @@ export namespace Prisma {
     readonly description: FieldRef<"Event", 'String'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
     readonly endTime: FieldRef<"Event", 'DateTime'>
+    readonly noPrice: FieldRef<"Event", 'Float[]'>
+    readonly yesPrice: FieldRef<"Event", 'Float[]'>
   }
     
 
@@ -4734,6 +4790,7 @@ export namespace Prisma {
     eventId: string | null
     buyerId: string | null
     sellerId: string | null
+    side: $Enums.TradeSide | null
     sellQty: number | null
     buyQty: number | null
     buyPrice: number | null
@@ -4748,6 +4805,7 @@ export namespace Prisma {
     eventId: string | null
     buyerId: string | null
     sellerId: string | null
+    side: $Enums.TradeSide | null
     sellQty: number | null
     buyQty: number | null
     buyPrice: number | null
@@ -4762,6 +4820,7 @@ export namespace Prisma {
     eventId: number
     buyerId: number
     sellerId: number
+    side: number
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -4792,6 +4851,7 @@ export namespace Prisma {
     eventId?: true
     buyerId?: true
     sellerId?: true
+    side?: true
     sellQty?: true
     buyQty?: true
     buyPrice?: true
@@ -4806,6 +4866,7 @@ export namespace Prisma {
     eventId?: true
     buyerId?: true
     sellerId?: true
+    side?: true
     sellQty?: true
     buyQty?: true
     buyPrice?: true
@@ -4820,6 +4881,7 @@ export namespace Prisma {
     eventId?: true
     buyerId?: true
     sellerId?: true
+    side?: true
     sellQty?: true
     buyQty?: true
     buyPrice?: true
@@ -4921,6 +4983,7 @@ export namespace Prisma {
     eventId: string
     buyerId: string
     sellerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -4954,6 +5017,7 @@ export namespace Prisma {
     eventId?: boolean
     buyerId?: boolean
     sellerId?: boolean
+    side?: boolean
     sellQty?: boolean
     buyQty?: boolean
     buyPrice?: boolean
@@ -4971,6 +5035,7 @@ export namespace Prisma {
     eventId?: boolean
     buyerId?: boolean
     sellerId?: boolean
+    side?: boolean
     sellQty?: boolean
     buyQty?: boolean
     buyPrice?: boolean
@@ -4988,6 +5053,7 @@ export namespace Prisma {
     eventId?: boolean
     buyerId?: boolean
     sellerId?: boolean
+    side?: boolean
     sellQty?: boolean
     buyQty?: boolean
     buyPrice?: boolean
@@ -5005,6 +5071,7 @@ export namespace Prisma {
     eventId?: boolean
     buyerId?: boolean
     sellerId?: boolean
+    side?: boolean
     sellQty?: boolean
     buyQty?: boolean
     buyPrice?: boolean
@@ -5014,7 +5081,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type TradeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "buyerId" | "sellerId" | "sellQty" | "buyQty" | "buyPrice" | "sellPrice" | "buyerOrderId" | "sellerOrderId" | "createdAt", ExtArgs["result"]["trade"]>
+  export type TradeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "eventId" | "buyerId" | "sellerId" | "side" | "sellQty" | "buyQty" | "buyPrice" | "sellPrice" | "buyerOrderId" | "sellerOrderId" | "createdAt", ExtArgs["result"]["trade"]>
   export type TradeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     event?: boolean | EventDefaultArgs<ExtArgs>
     buyerUser?: boolean | UserDefaultArgs<ExtArgs>
@@ -5043,6 +5110,7 @@ export namespace Prisma {
       eventId: string
       buyerId: string
       sellerId: string
+      side: $Enums.TradeSide
       sellQty: number
       buyQty: number
       buyPrice: number
@@ -5480,6 +5548,7 @@ export namespace Prisma {
     readonly eventId: FieldRef<"Trade", 'String'>
     readonly buyerId: FieldRef<"Trade", 'String'>
     readonly sellerId: FieldRef<"Trade", 'String'>
+    readonly side: FieldRef<"Trade", 'TradeSide'>
     readonly sellQty: FieldRef<"Trade", 'Int'>
     readonly buyQty: FieldRef<"Trade", 'Int'>
     readonly buyPrice: FieldRef<"Trade", 'Float'>
@@ -5932,7 +6001,9 @@ export namespace Prisma {
     title: 'title',
     description: 'description',
     createdAt: 'createdAt',
-    endTime: 'endTime'
+    endTime: 'endTime',
+    noPrice: 'noPrice',
+    yesPrice: 'yesPrice'
   };
 
   export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -5958,6 +6029,7 @@ export namespace Prisma {
     eventId: 'eventId',
     buyerId: 'buyerId',
     sellerId: 'sellerId',
+    side: 'side',
     sellQty: 'sellQty',
     buyQty: 'buyQty',
     buyPrice: 'buyPrice',
@@ -6169,6 +6241,8 @@ export namespace Prisma {
     description?: StringFilter<"Event"> | string
     createdAt?: DateTimeFilter<"Event"> | Date | string
     endTime?: DateTimeFilter<"Event"> | Date | string
+    noPrice?: FloatNullableListFilter<"Event">
+    yesPrice?: FloatNullableListFilter<"Event">
     orders?: OrderListRelationFilter
     trades?: TradeListRelationFilter
   }
@@ -6179,6 +6253,8 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     endTime?: SortOrder
+    noPrice?: SortOrder
+    yesPrice?: SortOrder
     orders?: OrderOrderByRelationAggregateInput
     trades?: TradeOrderByRelationAggregateInput
   }
@@ -6192,6 +6268,8 @@ export namespace Prisma {
     description?: StringFilter<"Event"> | string
     createdAt?: DateTimeFilter<"Event"> | Date | string
     endTime?: DateTimeFilter<"Event"> | Date | string
+    noPrice?: FloatNullableListFilter<"Event">
+    yesPrice?: FloatNullableListFilter<"Event">
     orders?: OrderListRelationFilter
     trades?: TradeListRelationFilter
   }, "id">
@@ -6202,9 +6280,13 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     endTime?: SortOrder
+    noPrice?: SortOrder
+    yesPrice?: SortOrder
     _count?: EventCountOrderByAggregateInput
+    _avg?: EventAvgOrderByAggregateInput
     _max?: EventMaxOrderByAggregateInput
     _min?: EventMinOrderByAggregateInput
+    _sum?: EventSumOrderByAggregateInput
   }
 
   export type EventScalarWhereWithAggregatesInput = {
@@ -6216,6 +6298,8 @@ export namespace Prisma {
     description?: StringWithAggregatesFilter<"Event"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     endTime?: DateTimeWithAggregatesFilter<"Event"> | Date | string
+    noPrice?: FloatNullableListFilter<"Event">
+    yesPrice?: FloatNullableListFilter<"Event">
   }
 
   export type OrderWhereInput = {
@@ -6306,6 +6390,7 @@ export namespace Prisma {
     eventId?: StringFilter<"Trade"> | string
     buyerId?: StringFilter<"Trade"> | string
     sellerId?: StringFilter<"Trade"> | string
+    side?: EnumTradeSideFilter<"Trade"> | $Enums.TradeSide
     sellQty?: IntFilter<"Trade"> | number
     buyQty?: IntFilter<"Trade"> | number
     buyPrice?: FloatFilter<"Trade"> | number
@@ -6323,6 +6408,7 @@ export namespace Prisma {
     eventId?: SortOrder
     buyerId?: SortOrder
     sellerId?: SortOrder
+    side?: SortOrder
     sellQty?: SortOrder
     buyQty?: SortOrder
     buyPrice?: SortOrder
@@ -6343,6 +6429,7 @@ export namespace Prisma {
     eventId?: StringFilter<"Trade"> | string
     buyerId?: StringFilter<"Trade"> | string
     sellerId?: StringFilter<"Trade"> | string
+    side?: EnumTradeSideFilter<"Trade"> | $Enums.TradeSide
     sellQty?: IntFilter<"Trade"> | number
     buyQty?: IntFilter<"Trade"> | number
     buyPrice?: FloatFilter<"Trade"> | number
@@ -6360,6 +6447,7 @@ export namespace Prisma {
     eventId?: SortOrder
     buyerId?: SortOrder
     sellerId?: SortOrder
+    side?: SortOrder
     sellQty?: SortOrder
     buyQty?: SortOrder
     buyPrice?: SortOrder
@@ -6382,6 +6470,7 @@ export namespace Prisma {
     eventId?: StringWithAggregatesFilter<"Trade"> | string
     buyerId?: StringWithAggregatesFilter<"Trade"> | string
     sellerId?: StringWithAggregatesFilter<"Trade"> | string
+    side?: EnumTradeSideWithAggregatesFilter<"Trade"> | $Enums.TradeSide
     sellQty?: IntWithAggregatesFilter<"Trade"> | number
     buyQty?: IntWithAggregatesFilter<"Trade"> | number
     buyPrice?: FloatWithAggregatesFilter<"Trade"> | number
@@ -6472,6 +6561,8 @@ export namespace Prisma {
     description: string
     createdAt?: Date | string
     endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
     orders?: OrderCreateNestedManyWithoutEventInput
     trades?: TradeCreateNestedManyWithoutEventInput
   }
@@ -6482,6 +6573,8 @@ export namespace Prisma {
     description: string
     createdAt?: Date | string
     endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
     orders?: OrderUncheckedCreateNestedManyWithoutEventInput
     trades?: TradeUncheckedCreateNestedManyWithoutEventInput
   }
@@ -6492,6 +6585,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
     orders?: OrderUpdateManyWithoutEventNestedInput
     trades?: TradeUpdateManyWithoutEventNestedInput
   }
@@ -6502,6 +6597,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
     orders?: OrderUncheckedUpdateManyWithoutEventNestedInput
     trades?: TradeUncheckedUpdateManyWithoutEventNestedInput
   }
@@ -6512,6 +6609,8 @@ export namespace Prisma {
     description: string
     createdAt?: Date | string
     endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
   }
 
   export type EventUpdateManyMutationInput = {
@@ -6520,6 +6619,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
   }
 
   export type EventUncheckedUpdateManyInput = {
@@ -6528,6 +6629,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
   }
 
   export type OrderCreateInput = {
@@ -6614,6 +6717,7 @@ export namespace Prisma {
 
   export type TradeCreateInput = {
     id?: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -6631,6 +6735,7 @@ export namespace Prisma {
     eventId: string
     buyerId: string
     sellerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -6642,6 +6747,7 @@ export namespace Prisma {
 
   export type TradeUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -6659,6 +6765,7 @@ export namespace Prisma {
     eventId?: StringFieldUpdateOperationsInput | string
     buyerId?: StringFieldUpdateOperationsInput | string
     sellerId?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -6673,6 +6780,7 @@ export namespace Prisma {
     eventId: string
     buyerId: string
     sellerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -6684,6 +6792,7 @@ export namespace Prisma {
 
   export type TradeUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -6698,6 +6807,7 @@ export namespace Prisma {
     eventId?: StringFieldUpdateOperationsInput | string
     buyerId?: StringFieldUpdateOperationsInput | string
     sellerId?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -6835,12 +6945,27 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type FloatNullableListFilter<$PrismaModel = never> = {
+    equals?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    has?: number | FloatFieldRefInput<$PrismaModel> | null
+    hasEvery?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    hasSome?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type EventCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
     endTime?: SortOrder
+    noPrice?: SortOrder
+    yesPrice?: SortOrder
+  }
+
+  export type EventAvgOrderByAggregateInput = {
+    noPrice?: SortOrder
+    yesPrice?: SortOrder
   }
 
   export type EventMaxOrderByAggregateInput = {
@@ -6857,6 +6982,11 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     endTime?: SortOrder
+  }
+
+  export type EventSumOrderByAggregateInput = {
+    noPrice?: SortOrder
+    yesPrice?: SortOrder
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -7012,6 +7142,7 @@ export namespace Prisma {
     eventId?: SortOrder
     buyerId?: SortOrder
     sellerId?: SortOrder
+    side?: SortOrder
     sellQty?: SortOrder
     buyQty?: SortOrder
     buyPrice?: SortOrder
@@ -7033,6 +7164,7 @@ export namespace Prisma {
     eventId?: SortOrder
     buyerId?: SortOrder
     sellerId?: SortOrder
+    side?: SortOrder
     sellQty?: SortOrder
     buyQty?: SortOrder
     buyPrice?: SortOrder
@@ -7047,6 +7179,7 @@ export namespace Prisma {
     eventId?: SortOrder
     buyerId?: SortOrder
     sellerId?: SortOrder
+    side?: SortOrder
     sellQty?: SortOrder
     buyQty?: SortOrder
     buyPrice?: SortOrder
@@ -7201,6 +7334,14 @@ export namespace Prisma {
     deleteMany?: TradeScalarWhereInput | TradeScalarWhereInput[]
   }
 
+  export type EventCreatenoPriceInput = {
+    set: number[]
+  }
+
+  export type EventCreateyesPriceInput = {
+    set: number[]
+  }
+
   export type OrderCreateNestedManyWithoutEventInput = {
     create?: XOR<OrderCreateWithoutEventInput, OrderUncheckedCreateWithoutEventInput> | OrderCreateWithoutEventInput[] | OrderUncheckedCreateWithoutEventInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutEventInput | OrderCreateOrConnectWithoutEventInput[]
@@ -7231,6 +7372,16 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type EventUpdatenoPriceInput = {
+    set?: number[]
+    push?: number | number[]
+  }
+
+  export type EventUpdateyesPriceInput = {
+    set?: number[]
+    push?: number | number[]
   }
 
   export type OrderUpdateManyWithoutEventNestedInput = {
@@ -7574,6 +7725,7 @@ export namespace Prisma {
 
   export type TradeCreateWithoutBuyerUserInput = {
     id?: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -7589,6 +7741,7 @@ export namespace Prisma {
     id?: string
     eventId: string
     sellerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -7610,6 +7763,7 @@ export namespace Prisma {
 
   export type TradeCreateWithoutSellerUserInput = {
     id?: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -7625,6 +7779,7 @@ export namespace Prisma {
     id?: string
     eventId: string
     buyerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -7699,6 +7854,7 @@ export namespace Prisma {
     eventId?: StringFilter<"Trade"> | string
     buyerId?: StringFilter<"Trade"> | string
     sellerId?: StringFilter<"Trade"> | string
+    side?: EnumTradeSideFilter<"Trade"> | $Enums.TradeSide
     sellQty?: IntFilter<"Trade"> | number
     buyQty?: IntFilter<"Trade"> | number
     buyPrice?: FloatFilter<"Trade"> | number
@@ -7758,6 +7914,7 @@ export namespace Prisma {
 
   export type TradeCreateWithoutEventInput = {
     id?: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -7773,6 +7930,7 @@ export namespace Prisma {
     id?: string
     buyerId: string
     sellerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -7857,6 +8015,8 @@ export namespace Prisma {
     description: string
     createdAt?: Date | string
     endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
     trades?: TradeCreateNestedManyWithoutEventInput
   }
 
@@ -7866,6 +8026,8 @@ export namespace Prisma {
     description: string
     createdAt?: Date | string
     endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
     trades?: TradeUncheckedCreateNestedManyWithoutEventInput
   }
 
@@ -7924,6 +8086,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
     trades?: TradeUpdateManyWithoutEventNestedInput
   }
 
@@ -7933,6 +8097,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
     trades?: TradeUncheckedUpdateManyWithoutEventNestedInput
   }
 
@@ -7942,6 +8108,8 @@ export namespace Prisma {
     description: string
     createdAt?: Date | string
     endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
     orders?: OrderCreateNestedManyWithoutEventInput
   }
 
@@ -7951,6 +8119,8 @@ export namespace Prisma {
     description: string
     createdAt?: Date | string
     endTime: Date | string
+    noPrice?: EventCreatenoPriceInput | number[]
+    yesPrice?: EventCreateyesPriceInput | number[]
     orders?: OrderUncheckedCreateNestedManyWithoutEventInput
   }
 
@@ -8030,6 +8200,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
     orders?: OrderUpdateManyWithoutEventNestedInput
   }
 
@@ -8039,6 +8211,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    noPrice?: EventUpdatenoPriceInput | number[]
+    yesPrice?: EventUpdateyesPriceInput | number[]
     orders?: OrderUncheckedUpdateManyWithoutEventNestedInput
   }
 
@@ -8123,6 +8297,7 @@ export namespace Prisma {
     id?: string
     eventId: string
     sellerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -8136,6 +8311,7 @@ export namespace Prisma {
     id?: string
     eventId: string
     buyerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -8180,6 +8356,7 @@ export namespace Prisma {
 
   export type TradeUpdateWithoutBuyerUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -8195,6 +8372,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     sellerId?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -8208,6 +8386,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     sellerId?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -8219,6 +8398,7 @@ export namespace Prisma {
 
   export type TradeUpdateWithoutSellerUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -8234,6 +8414,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     buyerId?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -8247,6 +8428,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     buyerId?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -8271,6 +8453,7 @@ export namespace Prisma {
     id?: string
     buyerId: string
     sellerId: string
+    side: $Enums.TradeSide
     sellQty: number
     buyQty: number
     buyPrice: number
@@ -8315,6 +8498,7 @@ export namespace Prisma {
 
   export type TradeUpdateWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -8330,6 +8514,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     buyerId?: StringFieldUpdateOperationsInput | string
     sellerId?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number
@@ -8343,6 +8528,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     buyerId?: StringFieldUpdateOperationsInput | string
     sellerId?: StringFieldUpdateOperationsInput | string
+    side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     sellQty?: IntFieldUpdateOperationsInput | number
     buyQty?: IntFieldUpdateOperationsInput | number
     buyPrice?: FloatFieldUpdateOperationsInput | number

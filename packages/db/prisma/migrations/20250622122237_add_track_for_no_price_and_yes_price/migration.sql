@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "noPrice" DOUBLE PRECISION[],
+ADD COLUMN     "yesPrice" DOUBLE PRECISION[];

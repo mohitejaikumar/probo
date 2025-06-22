@@ -146,6 +146,7 @@ async function getAllData() {
         sellQuantity: item.sellQty,
         tradeId: item.id,
         timestamp: item.createdAt,
+        side: item.side,
       };
     });
     user.boughtTrade.map((item) => {
@@ -161,6 +162,7 @@ async function getAllData() {
         sellQuantity: item.sellQty,
         tradeId: item.id,
         timestamp: item.createdAt,
+        side: item.side,
       };
     });
     user.orders.map((item) => {

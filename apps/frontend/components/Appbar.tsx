@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Appbar() {
   return (
-    <nav className="bg-[#F3F3F3] md:inset-x-16 inset-x-0 backdrop-blur-2xl z-[1000] border-b-1 border-neutral-200  fixed">
+    <nav className="bg-[#F3F3F3] md:inset-x-0 md:px-16 inset-x-0 backdrop-blur-2xl z-[1000] border-b-1 border-neutral-200  fixed">
       <div className="w-full mx-auto px-4 md:px-0">
         <div className="flex justify-between items-center">
           <Link href={"/"}>

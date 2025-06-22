@@ -70,14 +70,8 @@ export default function OrderBook({ eventId }: { eventId: string }) {
     };
   }
 
-  function setPrices(yesQty: number, noQty: number, b: number) {
-    setLMSRPrices(yesQty, noQty, b);
-    // Normalize to get prices
-    const priceYES = getPrices(yesQty, noQty, b).YES;
-    const priceNO = getPrices(yesQty, noQty, b).NO;
-
-    setYesProbability((prev) => [...prev, priceYES]);
-    setNoProbability((prev) => [...prev, priceNO]);
+  function setPrices(yesPrice: number, noPrice: number) {
+    setLMSRPrices(yesPrice, noPrice);
   }
 
   useLayoutEffect(() => {
@@ -141,130 +135,33 @@ export default function OrderBook({ eventId }: { eventId: string }) {
             ].slice(0, 6);
           });
         }
+        const yesPrice =
+          ws_data.side === "YES" ? ws_data.sellPrice : 10 - ws_data.sellPrice;
+        const noPrice = 10 - yesPrice;
+        setPrices(yesPrice, noPrice);
+        setYesProbability((prev) => [...prev, yesPrice * 10]);
+        setNoProbability((prev) => [...prev, noPrice * 10]);
+        setTimeSeriesData((prev) => {
+          return [
+            ...prev,
+            new Date(ws_data.timestamp).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+          ];
+        });
       }
       if (data?.type == "orderbook") {
         const ws_data = JSON.parse(data.data);
         console.log("ws_orderbook", ws_data);
         setOrderBook(ws_data.orderbook);
-        // calculate YES and NO price using the Logarithmic formulae
-
-        if (ws_data.orderbook) {
-          // @ts-ignore
-          const totalYesQuantity = ws_data.orderbook.YES.reduce((acc, item) => {
-            return item.quantity + acc;
-          }, 0);
-          // @ts-ignore
-          const totalNoQuantity = ws_data.orderbook.NO.reduce((acc, item) => {
-            return item.quantity + acc;
-          }, 0);
-
-          console.log(
-            `totalYESQty: ${totalYesQuantity}, totalNOQty: ${totalNoQuantity}`
-          );
-
-          // Set initial probability arrays if they're empty
-          if (yesProbability.length === 0) {
-            // Create a map of timestamps to quantities for probability calculation
-            const timestampQuantityMap = new Map<
-              number,
-              { yesQty: number; noQty: number }
-            >();
-
-            // Process YES orders
-            ws_data.orderbook.YES.forEach((item) => {
-              item.userOrders?.forEach((order) => {
-                const timestamp = new Date(order.timestamp).getTime();
-                const existing = timestampQuantityMap.get(timestamp) || {
-                  yesQty: 0,
-                  noQty: 0,
-                };
-                existing.yesQty += order.quantity;
-                timestampQuantityMap.set(timestamp, existing);
-              });
-            });
-
-            // Process NO orders
-            ws_data.orderbook.NO.forEach((item) => {
-              item.userOrders?.forEach((order) => {
-                const timestamp = new Date(order.timestamp).getTime();
-                const existing = timestampQuantityMap.get(timestamp) || {
-                  yesQty: 0,
-                  noQty: 0,
-                };
-                existing.noQty += order.quantity;
-                timestampQuantityMap.set(timestamp, existing);
-              });
-            });
-
-            // Sort timestamps and calculate cumulative probabilities
-            const sortedTimestamps = Array.from(
-              timestampQuantityMap.keys()
-            ).sort((a, b) => a - b);
-            let cumulativeYesQty = 0;
-            let cumulativeNoQty = 0;
-            const initialYesProbs: number[] = [];
-            const initialNoProbs: number[] = [];
-
-            sortedTimestamps.forEach((timestamp) => {
-              const quantities = timestampQuantityMap.get(timestamp)!;
-              cumulativeYesQty += quantities.yesQty;
-              cumulativeNoQty += quantities.noQty;
-
-              const totalQty = cumulativeYesQty + cumulativeNoQty;
-              if (totalQty > 0) {
-                const { YES, NO } = getProbability(
-                  cumulativeYesQty,
-                  cumulativeNoQty,
-                  1
-                );
-                const yesProb = YES;
-                const noProb = NO;
-                initialYesProbs.push(yesProb);
-                initialNoProbs.push(noProb);
-              }
-            });
-
-            setYesProbability(initialYesProbs);
-            setNoProbability(initialNoProbs);
-            setLMSRPrices(totalYesQuantity, totalNoQuantity, 1);
-          } else setPrices(totalYesQuantity, totalNoQuantity, 1);
-        }
-        const timestamps = [
-          ...(ws_data.orderbook?.YES.flatMap((item) =>
-            item.userOrders?.map((order) => new Date(order.timestamp).getTime())
-          ) || []),
-          ...(ws_data.orderbook?.NO.flatMap((item) =>
-            item.userOrders?.map((order) => new Date(order.timestamp).getTime())
-          ) || []),
-        ];
-        timestamps.sort((a, b) => a - b);
-        if (timeSeriesData.length == 0) {
-          console.log("timestamps", timestamps);
-          setTimeSeriesData(() =>
-            timestamps.map((item) => {
-              return new Date(item).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              });
-            })
-          );
-        } else {
-          setTimeSeriesData((prev) => [
-            ...prev,
-            new Date(timestamps[timestamps.length - 1]).toLocaleTimeString(
-              "en-US",
-              {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              }
-            ),
-          ]);
-        }
       }
       if (data?.type == "recentTrade") {
         let recentTrades: RecentActivity[] = [];
+        let timestamps: number[] = [];
+        let yesPrice: number | null = null;
+        let noPrice: number | null = null;
         //@ts-ignore
         data.data.map((trade) => {
           recentTrades.push({
@@ -276,10 +173,33 @@ export default function OrderBook({ eventId }: { eventId: string }) {
             noUserId: trade.item == "NO" ? trade.buyerId : trade.sellerId,
             yesUserId: trade.item == "YES" ? trade.buyerId : trade.sellerId,
           });
+          timestamps.push(new Date(trade.timestamp).getTime());
+          let yPrice =
+            trade.side === "YES" ? trade.sellPrice : 10 - trade.sellPrice;
+          let nPrice = 10 - yPrice!;
+          if (!yesPrice && !noPrice) {
+            console.log("setting prices", yPrice, nPrice);
+            setPrices(yPrice, nPrice);
+          }
+          yesPrice = yPrice;
+          noPrice = nPrice;
+          setYesProbability((prev) => [yPrice * 10, ...prev]);
+          setNoProbability((prev) => [nPrice * 10, ...prev]);
         });
-        setRecentActivity((prev) => {
-          return [...recentTrades, ...prev].slice(0, 6);
-        });
+        timestamps.sort(
+          (a, b) => new Date(a).getTime() - new Date(b).getTime()
+        );
+        console.log("timestamps", timestamps);
+        setTimeSeriesData(() =>
+          timestamps.map((item) => {
+            return new Date(item).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            });
+          })
+        );
+        setRecentActivity(recentTrades);
       }
     };
     ws.onclose = () => console.log("WebSocket connection closed");
@@ -296,7 +216,6 @@ export default function OrderBook({ eventId }: { eventId: string }) {
     <>
       <div className="w-full bg-white rounded-xl border-1 border-neutral-200 mt-10 h-[350px] px-6 pt-6 pb-4 overflow-hidden">
         {/* SubTabs */}
-
         <div className="border-b-1 border-neutral-200 pb-2 flex gap-10">
           <span
             className={cn(

@@ -42,7 +42,7 @@ export class BroadCaster {
           ws.send(
             JSON.stringify({
               type: "recentTrade",
-              data: InMemoryTrades.slice(0, 6),
+              data: InMemoryTrades,
             })
           );
         }

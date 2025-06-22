@@ -49,6 +49,7 @@ export interface Trades {
   sellPrice: number;
   buyPrice: number;
   sellOrderId: string;
+  side: "YES" | "NO";
   buyOrderId: string;
   timestamp: Date;
 }

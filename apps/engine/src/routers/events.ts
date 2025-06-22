@@ -23,26 +23,33 @@ function getPrices(yesQty: number, noQty: number, b: number) {
 
 export async function getAllEvents(message: any) {
   const { messageId } = message;
-  const events = Object.keys(InMemoryEvents).map((key) => {
-    const totalYesQuantity = InMemoryOrderBook[key]!.YES.reduce((acc, item) => {
-      return item.quantity + acc;
-    }, 0);
-    // @ts-ignore
-    const totalNoQuantity = InMemoryOrderBook[key]!.NO.reduce((acc, item) => {
-      return item.quantity + acc;
-    }, 0);
-
-    const { YES, NO } = getPrices(totalYesQuantity, totalNoQuantity, 1);
-    return {
+  const events = [];
+  for (const key of Object.keys(InMemoryEvents)) {
+    const lastTrade = await prisma.trade.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        eventId: key,
+      },
+    });
+    const yesPrice =
+      lastTrade?.side === "YES"
+        ? lastTrade?.sellPrice
+        : 10 - (lastTrade?.sellPrice ?? 5);
+    const noPrice = 10 - yesPrice;
+    console.log("yesPrice", yesPrice, "noPrice", noPrice);
+    console.log(key, InMemoryEvents[key]);
+    events.push({
       id: key,
       title: InMemoryEvents[key]!.title,
       description: InMemoryEvents[key]!.description,
       imageURL:
         "https://probo.in/_next/image?url=https%3A%2F%2Fprobo.gumlet.io%2Fimage%2Fupload%2Fprobo_product_images%2FIMAGE_e2155c49-3dcd-45a6-93e5-f585230916e4.png&w=256&q=75",
-      yesPrice: YES,
-      noPrice: NO,
-    };
-  });
+      yesPrice: yesPrice,
+      noPrice: noPrice,
+    });
+  }
   const data = JSON.stringify({
     messageId,
     events: events,
@@ -279,6 +286,7 @@ export const initiateOrderLogic = async (
             buyerId: userId,
             buyOrderId: orderId,
             buyPrice: price,
+            side: side,
             buyQuantity: sellerTradeOty,
             sellerId: sellerOrder.userId,
             sellOrderId: sellerOrderId,
@@ -288,7 +296,6 @@ export const initiateOrderLogic = async (
           };
           await BroadcastChannel("trade", {
             ...InMemoryTrades[tradeId],
-            item: side,
             isPseudoMatch,
           });
           console.log(
@@ -460,6 +467,7 @@ export async function exit(
             buyPrice: sellprice,
             buyQuantity: sellerQuantity,
             eventId,
+            side: side,
             sellerId: userId,
             sellOrderId: orderId,
             sellPrice: price,
@@ -468,7 +476,6 @@ export async function exit(
           };
           await BroadcastChannel("exit_trade", {
             ...InMemoryTrades[tradeId],
-            item: side,
           });
 
           // Balances

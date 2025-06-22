@@ -26,6 +26,8 @@ model Event {
   description String
   createdAt   DateTime @default(now())
   endTime     DateTime
+  noPrice     Float[]
+  yesPrice    Float[]
   orders      Order[]
   trades      Trade[]
 }
@@ -45,20 +47,21 @@ model Order {
 }
 
 model Trade {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   eventId       String
   buyerId       String
   sellerId      String
-  event         Event    @relation(fields: [eventId], references: [id])
-  buyerUser     User     @relation("BuyerRelation", fields: [buyerId], references: [id])
-  sellerUser    User     @relation("SellerRelation", fields: [sellerId], references: [id])
+  side          TradeSide
+  event         Event     @relation(fields: [eventId], references: [id])
+  buyerUser     User      @relation("BuyerRelation", fields: [buyerId], references: [id])
+  sellerUser    User      @relation("SellerRelation", fields: [sellerId], references: [id])
   sellQty       Int
   buyQty        Int
   buyPrice      Float
   sellPrice     Float
   buyerOrderId  String
   sellerOrderId String
-  createdAt     DateTime @default(now())
+  createdAt     DateTime  @default(now())
 }
 
 enum TradeSide {

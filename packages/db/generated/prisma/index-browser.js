@@ -134,7 +134,9 @@ exports.Prisma.EventScalarFieldEnum = {
   title: 'title',
   description: 'description',
   createdAt: 'createdAt',
-  endTime: 'endTime'
+  endTime: 'endTime',
+  noPrice: 'noPrice',
+  yesPrice: 'yesPrice'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -154,6 +156,7 @@ exports.Prisma.TradeScalarFieldEnum = {
   eventId: 'eventId',
   buyerId: 'buyerId',
   sellerId: 'sellerId',
+  side: 'side',
   sellQty: 'sellQty',
   buyQty: 'buyQty',
   buyPrice: 'buyPrice',
