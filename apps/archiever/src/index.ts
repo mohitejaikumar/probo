@@ -281,6 +281,34 @@ async function startArchiever() {
               } catch (err) {
                 console.log("Error: ", err);
               }
+            } else if (message.type == "balance_update") {
+              try {
+                await prisma.user.update({
+                  where: {
+                    id: parsedData.userId,
+                  },
+                  data: {
+                    balance: {
+                      increment: parsedData.isBalanceIncrement
+                        ? parsedData.balance
+                        : 0,
+                      decrement: parsedData.isBalanceIncrement
+                        ? 0
+                        : parsedData.balance,
+                    },
+                    lockedBalance: {
+                      increment: parsedData.isLockedBalanceIncrement
+                        ? parsedData.lockedBalance
+                        : 0,
+                      decrement: parsedData.isLockedBalanceIncrement
+                        ? 0
+                        : parsedData.lockedBalance,
+                    },
+                  },
+                });
+              } catch (err) {
+                console.log("error updating balance");
+              }
             }
 
             // ACK

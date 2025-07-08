@@ -5,26 +5,36 @@ import prisma from "@repo/db";
 export async function userCreation(message: any) {
   const { messageId, userId } = message;
   if (!InMemoryINRBalances[userId]) {
-    /*
-    1. check if it is in db
-        - if it is in db get balance data and store it inmemory
-    2. if it is not in db 
-        - store inmemory and create new row in db
-    */
-
-    InMemoryINRBalances[userId] = {
-      balance: 0,
-      lockedBalance: 0,
-    };
+    try {
+      const user = await prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      });
+      if (user) {
+        InMemoryINRBalances[userId] = {
+          balance: user.balance,
+          lockedBalance: user.lockedBalance,
+        };
+      } else {
+        const data = JSON.stringify({
+          status: "FAILED",
+          messageId: messageId,
+        });
+        await publisher.publish(`userCreation::${messageId}`, data);
+        return;
+      }
+    } catch (err) {
+      console.log("Error: ", err);
+      const data = JSON.stringify({
+        status: "FAILED",
+        messageId: messageId,
+      });
+      await publisher.publish(`userCreation::${messageId}`, data);
+    }
 
     const data = JSON.stringify({
       status: "SUCCESS",
-      messageId: messageId,
-    });
-    await publisher.publish(`userCreation::${messageId}`, data);
-  } else {
-    const data = JSON.stringify({
-      status: "FAILED",
       messageId: messageId,
     });
     await publisher.publish(`userCreation::${messageId}`, data);

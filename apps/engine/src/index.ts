@@ -24,6 +24,8 @@ import {
   InMemoryTrades,
 } from "./store";
 
+const PAYMENT_SUCCESS_WEBHOOK = "PAYMENT_SUCCESS_WEBHOOK";
+
 const app = express();
 
 app.use(express.json());
@@ -75,6 +77,26 @@ async function processingQueue() {
 }
 
 processingQueue();
+
+app.post("/cashfree-webhook", async (req, res) => {
+  const payload = req.body;
+
+  const { type, event_time, data } = payload;
+
+  if (type === PAYMENT_SUCCESS_WEBHOOK) {
+    const orderId = data?.order?.order_id;
+    const amount = data?.order?.order_amount;
+    const cfPaymentId = data?.payment?.cf_payment_id;
+    const customerId = data?.customer_details?.customer_id;
+    const customerPhone = data?.customer_details?.customer_phone;
+
+    console.log(`✅ Payment Success for Order: ${orderId}`);
+    console.log(`→ Customer ID: ${customerId}`);
+    console.log(`→ Customer Phone: ${customerPhone}`);
+    console.log(`→ Amount: ₹${amount}, Payment ID: ${cfPaymentId}`);
+  }
+  res.sendStatus(200);
+});
 
 app.listen(3002, () => {
   console.log("Engine listening on port 3001");

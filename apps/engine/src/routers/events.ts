@@ -215,6 +215,16 @@ export const initiateOrderLogic = async (
   InMemoryINRBalances[userId]!.lockedBalance += cost;
   InMemoryINRBalances[userId]!.balance -= cost;
 
+  const data = {
+    userId,
+    isBalanceIncrement: false,
+    isLockedBalanceIncrement: true,
+    balance: cost,
+    lockedBalance: cost,
+  };
+
+  await BroadcastChannel("balance_update", data);
+
   let remainingQty = quantity;
   /*
   Buying YES -> 
@@ -329,8 +339,17 @@ export const initiateOrderLogic = async (
           InMemoryINRBalances[userId]!.lockedBalance -= cost;
 
           // balance out the quantities bought at low price
-          InMemoryINRBalances[userId]!.balance -=
+          InMemoryINRBalances[userId]!.balance +=
             (price - order.price) * sellerTradeOty;
+
+          const data = {
+            userId,
+            isBalanceIncrement: true,
+            isLockedBalanceIncrement: false,
+            balance: (price - order.price) * sellerTradeOty,
+            lockedBalance: cost,
+          };
+          await BroadcastChannel("balance_update", data);
 
           // update the pool
           if (!InMemoryStockBalance[eventId]) {
@@ -631,6 +650,16 @@ export async function exit(
     }
   }
   InMemoryINRBalances[userId]!.balance += (quantity - remainingQty) * price;
+
+  const data = {
+    userId,
+    isBalanceIncrement: true,
+    isLockedBalanceIncrement: false,
+    balance: (quantity - remainingQty) * price,
+    lockedBalance: 0,
+  };
+  await BroadcastChannel("balance_update", data);
+
   if (remainingQty == 0) {
     const orderExit = {
       id: orderId,
