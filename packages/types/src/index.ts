@@ -30,6 +30,7 @@ export interface OrderInterface {
   status: string;
   price: number;
   quantity: number;
+  matchedQuantity: number;
   timestamp: Date;
 }
 

@@ -41,6 +41,38 @@ router.post("/login", handleMiddleWare, async (req, res) => {
   await queue.lPush("engineQueue", data);
 });
 
+router.get("/orders/:userId/:eventId", handleMiddleWare, async (req, res) => {
+  const { userId, eventId } = req.params;
+  if (!userId || !eventId) {
+    res.status(400).json({
+      message: "userId or eventId not present",
+    });
+  }
+  const messageId = createId();
+  const data = JSON.stringify({
+    userId,
+    eventId,
+    messageId,
+    type: "getAllOrders",
+  });
+  await subscriber.subscribe(`getAllOrders::${messageId}`, async (data) => {
+    const parseData = JSON.parse(data);
+    await subscriber.unsubscribe(`getAllOrders::${messageId}`);
+    if ((parseData.messageId = messageId && parseData.status == "SUCCESS")) {
+      res.json({
+        message: "orders fetched successfully",
+        orders: parseData.orders,
+      });
+      return;
+    }
+    res.status(404).json({
+      message: "Error fetching orders",
+    });
+    return;
+  });
+  console.log(`queued event:${messageId}`);
+  await queue.lPush("engineQueue", data);
+});
 router.post("/signUp", handleMiddleWare, async (req, res) => {
   const { userId } = req.body;
   const messageId = createId();

@@ -11,6 +11,7 @@ import {
   createEvent,
   exitOrder,
   getAllEvents,
+  getAllOrders,
   getEvent,
   initiateOrder,
 } from "./routers/events";
@@ -63,6 +64,9 @@ async function processingQueue() {
         break;
       case "exitOrder":
         await exitOrder(message);
+        break;
+      case "getAllOrders":
+        await getAllOrders(message);
         break;
       case "eventCreation":
         await createEvent(message);
@@ -176,6 +180,7 @@ async function getAllData() {
         type: item.type,
         userId: item.userId,
         timestamp: item.createdAt,
+        matchedQuantity: item.matchedQuantity,
       };
     });
     user.orders.map((item) => {

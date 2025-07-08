@@ -119,17 +119,14 @@ export default function OrderBook({ eventId }: { eventId: string }) {
               {
                 tradeId: ws_data.tradeId,
                 noPrice:
-                  ws_data.item == "NO"
+                  ws_data.side == "NO"
                     ? ws_data.sellPrice
                     : 10 - ws_data.sellPrice,
-                yesPrice:
-                  ws_data.item == "YES"
-                    ? ws_data.sellPrice
-                    : 10 - ws_data.sellPrice,
+                yesPrice: 10 - noPrice,
                 noUserId:
-                  ws_data.item == "NO" ? ws_data.buyerId : ws_data.sellerId,
+                  ws_data.side == "NO" ? ws_data.buyerId : ws_data.sellerId,
                 yesUserId:
-                  ws_data.item == "YES" ? ws_data.buyerId : ws_data.sellerId,
+                  ws_data.side == "YES" ? ws_data.buyerId : ws_data.sellerId,
               },
               ...prev,
             ].slice(0, 6);
@@ -167,11 +164,11 @@ export default function OrderBook({ eventId }: { eventId: string }) {
           recentTrades.push({
             tradeId: trade.tradeId,
             noPrice:
-              trade.item == "NO" ? trade.sellPrice : 10 - trade.sellPrice,
+              trade.side == "NO" ? trade.sellPrice : 10 - trade.sellPrice,
             yesPrice:
-              trade.item == "YES" ? trade.sellPrice : 10 - trade.sellPrice,
-            noUserId: trade.item == "NO" ? trade.buyerId : trade.sellerId,
-            yesUserId: trade.item == "YES" ? trade.buyerId : trade.sellerId,
+              trade.side == "YES" ? trade.sellPrice : 10 - trade.sellPrice,
+            noUserId: trade.side == "NO" ? trade.buyerId : trade.sellerId,
+            yesUserId: trade.side == "YES" ? trade.buyerId : trade.sellerId,
           });
           timestamps.push(new Date(trade.timestamp).getTime());
           let yPrice =

@@ -3808,11 +3808,13 @@ export namespace Prisma {
 
   export type OrderAvgAggregateOutputType = {
     quantity: number | null
+    matchedQuantity: number | null
     price: number | null
   }
 
   export type OrderSumAggregateOutputType = {
     quantity: number | null
+    matchedQuantity: number | null
     price: number | null
   }
 
@@ -3821,6 +3823,7 @@ export namespace Prisma {
     userId: string | null
     eventId: string | null
     quantity: number | null
+    matchedQuantity: number | null
     side: $Enums.TradeSide | null
     type: $Enums.OrderType | null
     price: number | null
@@ -3833,6 +3836,7 @@ export namespace Prisma {
     userId: string | null
     eventId: string | null
     quantity: number | null
+    matchedQuantity: number | null
     side: $Enums.TradeSide | null
     type: $Enums.OrderType | null
     price: number | null
@@ -3845,6 +3849,7 @@ export namespace Prisma {
     userId: number
     eventId: number
     quantity: number
+    matchedQuantity: number
     side: number
     type: number
     price: number
@@ -3856,11 +3861,13 @@ export namespace Prisma {
 
   export type OrderAvgAggregateInputType = {
     quantity?: true
+    matchedQuantity?: true
     price?: true
   }
 
   export type OrderSumAggregateInputType = {
     quantity?: true
+    matchedQuantity?: true
     price?: true
   }
 
@@ -3869,6 +3876,7 @@ export namespace Prisma {
     userId?: true
     eventId?: true
     quantity?: true
+    matchedQuantity?: true
     side?: true
     type?: true
     price?: true
@@ -3881,6 +3889,7 @@ export namespace Prisma {
     userId?: true
     eventId?: true
     quantity?: true
+    matchedQuantity?: true
     side?: true
     type?: true
     price?: true
@@ -3893,6 +3902,7 @@ export namespace Prisma {
     userId?: true
     eventId?: true
     quantity?: true
+    matchedQuantity?: true
     side?: true
     type?: true
     price?: true
@@ -3992,6 +4002,7 @@ export namespace Prisma {
     userId: string
     eventId: string
     quantity: number
+    matchedQuantity: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -4023,6 +4034,7 @@ export namespace Prisma {
     userId?: boolean
     eventId?: boolean
     quantity?: boolean
+    matchedQuantity?: boolean
     side?: boolean
     type?: boolean
     price?: boolean
@@ -4037,6 +4049,7 @@ export namespace Prisma {
     userId?: boolean
     eventId?: boolean
     quantity?: boolean
+    matchedQuantity?: boolean
     side?: boolean
     type?: boolean
     price?: boolean
@@ -4051,6 +4064,7 @@ export namespace Prisma {
     userId?: boolean
     eventId?: boolean
     quantity?: boolean
+    matchedQuantity?: boolean
     side?: boolean
     type?: boolean
     price?: boolean
@@ -4065,6 +4079,7 @@ export namespace Prisma {
     userId?: boolean
     eventId?: boolean
     quantity?: boolean
+    matchedQuantity?: boolean
     side?: boolean
     type?: boolean
     price?: boolean
@@ -4072,7 +4087,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "eventId" | "quantity" | "side" | "type" | "price" | "status" | "createdAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "eventId" | "quantity" | "matchedQuantity" | "side" | "type" | "price" | "status" | "createdAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
@@ -4097,6 +4112,7 @@ export namespace Prisma {
       userId: string
       eventId: string
       quantity: number
+      matchedQuantity: number
       side: $Enums.TradeSide
       type: $Enums.OrderType
       price: number
@@ -4531,6 +4547,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Order", 'String'>
     readonly eventId: FieldRef<"Order", 'String'>
     readonly quantity: FieldRef<"Order", 'Int'>
+    readonly matchedQuantity: FieldRef<"Order", 'Int'>
     readonly side: FieldRef<"Order", 'TradeSide'>
     readonly type: FieldRef<"Order", 'OrderType'>
     readonly price: FieldRef<"Order", 'Float'>
@@ -7311,6 +7328,7 @@ export namespace Prisma {
     userId: 'userId',
     eventId: 'eventId',
     quantity: 'quantity',
+    matchedQuantity: 'matchedQuantity',
     side: 'side',
     type: 'type',
     price: 'price',
@@ -7641,6 +7659,7 @@ export namespace Prisma {
     userId?: StringFilter<"Order"> | string
     eventId?: StringFilter<"Order"> | string
     quantity?: IntFilter<"Order"> | number
+    matchedQuantity?: IntFilter<"Order"> | number
     side?: EnumTradeSideFilter<"Order"> | $Enums.TradeSide
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     price?: FloatFilter<"Order"> | number
@@ -7655,6 +7674,7 @@ export namespace Prisma {
     userId?: SortOrder
     eventId?: SortOrder
     quantity?: SortOrder
+    matchedQuantity?: SortOrder
     side?: SortOrder
     type?: SortOrder
     price?: SortOrder
@@ -7672,6 +7692,7 @@ export namespace Prisma {
     userId?: StringFilter<"Order"> | string
     eventId?: StringFilter<"Order"> | string
     quantity?: IntFilter<"Order"> | number
+    matchedQuantity?: IntFilter<"Order"> | number
     side?: EnumTradeSideFilter<"Order"> | $Enums.TradeSide
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     price?: FloatFilter<"Order"> | number
@@ -7686,6 +7707,7 @@ export namespace Prisma {
     userId?: SortOrder
     eventId?: SortOrder
     quantity?: SortOrder
+    matchedQuantity?: SortOrder
     side?: SortOrder
     type?: SortOrder
     price?: SortOrder
@@ -7706,6 +7728,7 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Order"> | string
     eventId?: StringWithAggregatesFilter<"Order"> | string
     quantity?: IntWithAggregatesFilter<"Order"> | number
+    matchedQuantity?: IntWithAggregatesFilter<"Order"> | number
     side?: EnumTradeSideWithAggregatesFilter<"Order"> | $Enums.TradeSide
     type?: EnumOrderTypeWithAggregatesFilter<"Order"> | $Enums.OrderType
     price?: FloatWithAggregatesFilter<"Order"> | number
@@ -8050,6 +8073,7 @@ export namespace Prisma {
   export type OrderCreateInput = {
     id?: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -8064,6 +8088,7 @@ export namespace Prisma {
     userId: string
     eventId: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -8074,6 +8099,7 @@ export namespace Prisma {
   export type OrderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -8088,6 +8114,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -8100,6 +8127,7 @@ export namespace Prisma {
     userId: string
     eventId: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -8110,6 +8138,7 @@ export namespace Prisma {
   export type OrderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -8122,6 +8151,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -8547,6 +8577,7 @@ export namespace Prisma {
     userId?: SortOrder
     eventId?: SortOrder
     quantity?: SortOrder
+    matchedQuantity?: SortOrder
     side?: SortOrder
     type?: SortOrder
     price?: SortOrder
@@ -8556,6 +8587,7 @@ export namespace Prisma {
 
   export type OrderAvgOrderByAggregateInput = {
     quantity?: SortOrder
+    matchedQuantity?: SortOrder
     price?: SortOrder
   }
 
@@ -8564,6 +8596,7 @@ export namespace Prisma {
     userId?: SortOrder
     eventId?: SortOrder
     quantity?: SortOrder
+    matchedQuantity?: SortOrder
     side?: SortOrder
     type?: SortOrder
     price?: SortOrder
@@ -8576,6 +8609,7 @@ export namespace Prisma {
     userId?: SortOrder
     eventId?: SortOrder
     quantity?: SortOrder
+    matchedQuantity?: SortOrder
     side?: SortOrder
     type?: SortOrder
     price?: SortOrder
@@ -8585,6 +8619,7 @@ export namespace Prisma {
 
   export type OrderSumOrderByAggregateInput = {
     quantity?: SortOrder
+    matchedQuantity?: SortOrder
     price?: SortOrder
   }
 
@@ -9359,6 +9394,7 @@ export namespace Prisma {
   export type OrderCreateWithoutUserInput = {
     id?: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -9371,6 +9407,7 @@ export namespace Prisma {
     id?: string
     eventId: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -9512,6 +9549,7 @@ export namespace Prisma {
     userId?: StringFilter<"Order"> | string
     eventId?: StringFilter<"Order"> | string
     quantity?: IntFilter<"Order"> | number
+    matchedQuantity?: IntFilter<"Order"> | number
     side?: EnumTradeSideFilter<"Order"> | $Enums.TradeSide
     type?: EnumOrderTypeFilter<"Order"> | $Enums.OrderType
     price?: FloatFilter<"Order"> | number
@@ -9599,6 +9637,7 @@ export namespace Prisma {
   export type OrderCreateWithoutEventInput = {
     id?: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -9611,6 +9650,7 @@ export namespace Prisma {
     id?: string
     userId: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -10214,6 +10254,7 @@ export namespace Prisma {
     id?: string
     eventId: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -10259,6 +10300,7 @@ export namespace Prisma {
   export type OrderUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -10271,6 +10313,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -10282,6 +10325,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -10398,6 +10442,7 @@ export namespace Prisma {
     id?: string
     userId: string
     quantity: number
+    matchedQuantity?: number
     side: $Enums.TradeSide
     type: $Enums.OrderType
     price: number
@@ -10429,6 +10474,7 @@ export namespace Prisma {
   export type OrderUpdateWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -10441,6 +10487,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number
@@ -10452,6 +10499,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    matchedQuantity?: IntFieldUpdateOperationsInput | number
     side?: EnumTradeSideFieldUpdateOperationsInput | $Enums.TradeSide
     type?: EnumOrderTypeFieldUpdateOperationsInput | $Enums.OrderType
     price?: FloatFieldUpdateOperationsInput | number

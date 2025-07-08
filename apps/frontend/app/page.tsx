@@ -159,7 +159,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("vyapaar");
 
   return (
-    <div className="min-h-screen bg-white py-2">
+    <div className="min-h-screen bg-white pt-10">
       {/* Hero Section - India's Leading Game of Skill */}
       <section className="mt-6 bg-gradient-to-br from-orange-50 via-blue-50 to-purple-50 py-12 sm:py-16 lg:py-20 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

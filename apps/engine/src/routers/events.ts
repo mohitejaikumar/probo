@@ -8,8 +8,9 @@ import {
   InMemoryStockBalance,
   InMemoryTrades,
 } from "../store";
-import { Sides } from "@repo/types";
+import { OrderInterface, Sides } from "@repo/types";
 import prisma from "@repo/db";
+import { cloneDeep } from "lodash";
 
 function getPrices(yesQty: number, noQty: number, b: number) {
   const expYES = Math.exp(yesQty / b);
@@ -21,6 +22,15 @@ function getPrices(yesQty: number, noQty: number, b: number) {
     NO: Math.round(priceYES * 10 * 2) / 2,
   };
 }
+
+/*
+
+  orderbook -> buy -> pseudo  -> LIVE
+  orderbook -> sell -> PENDING
+  pool -> MATCHED
+  exit -> EXECUTED
+
+*/
 
 export async function getAllEvents(message: any) {
   const { messageId } = message;
@@ -167,6 +177,7 @@ export const initiateOrder = async (message: any) => {
     type: "BUY",
     price: price,
     quantity: quantity,
+    matchedQuantity: 0,
     status: "LIVE",
     userId: userId,
     eventId: eventId,
@@ -252,11 +263,13 @@ export const initiateOrderLogic = async (
             isPseudoMatch = true;
             if (sellerTradeOty == sellerOrder.quantity) {
               // mark this as full order completed
-              InMemoryOrders[sellerOrderId].status = "COMPLETED";
+              InMemoryOrders[sellerOrderId].status = "MATCHED";
             }
             // broadcast this message
             const update = {
-              id: sellerOrderId,
+              sellerOrderId: sellerOrderId,
+              buyerOrderId: orderId,
+              matchedQuantity: sellerTradeOty,
               type: "SELL",
               status: InMemoryOrders[sellerOrderId].status,
             };
@@ -265,7 +278,7 @@ export const initiateOrderLogic = async (
           // this is case of sitting sellorders
           if (
             InMemoryOrders[sellerOrderId]?.type == "SELL" &&
-            InMemoryOrders[sellerOrderId]?.status == "LIVE" &&
+            InMemoryOrders[sellerOrderId]?.status == "PENDING" &&
             !sellerOrderId.endsWith("+pseudo")
           ) {
             if (sellerTradeOty == sellerOrder.quantity) {
@@ -273,7 +286,9 @@ export const initiateOrderLogic = async (
               InMemoryOrders[sellerOrderId].status = "EXECUTED";
             }
             const update = {
-              id: sellerOrderId,
+              sellerOrderId: sellerOrderId,
+              buyerOrderId: orderId,
+              matchedQuantity: sellerTradeOty,
               type: "BUY",
               status: InMemoryOrders[sellerOrderId].status,
             };
@@ -305,6 +320,8 @@ export const initiateOrderLogic = async (
 
           // Balance Logic
           sellerOrder.quantity -= sellerTradeOty;
+          InMemoryOrders[sellerOrderId]!.matchedQuantity += sellerTradeOty;
+          InMemoryOrders[orderId]!.matchedQuantity += sellerTradeOty;
           tradeOty -= sellerTradeOty;
           remainingQty -= sellerTradeOty;
           order.quantity -= sellerTradeOty;
@@ -408,12 +425,15 @@ export const initiateOrderLogic = async (
       });
     }
     console.log("created pseudo order", pseudoOrderId);
-    InMemoryOrders[pseudoOrderId] = InMemoryOrders[orderId]!;
+    InMemoryOrders[pseudoOrderId] = cloneDeep(InMemoryOrders[orderId]!);
     InMemoryOrders[pseudoOrderId]!.type = "SELL";
     InMemoryOrders[pseudoOrderId]!.side = getOppSideString(side);
     InMemoryOrders[pseudoOrderId].quantity = remainingQty;
+    InMemoryOrders[pseudoOrderId].orderId = pseudoOrderId;
+    InMemoryOrders[pseudoOrderId].matchedQuantity = 0;
     // PURE BALANCE WITH SELLTYPE
     InMemoryOrders[orderId]!.quantity -= remainingQty;
+    InMemoryOrders[orderId]!.status = "MATCHED";
     remainingQty = 0;
     const data = {
       orderId: orderId,
@@ -442,6 +462,41 @@ export const initiateOrderLogic = async (
   return;
 };
 
+export const getAllOrders = async (message: any) => {
+  const { messageId, userId, eventId } = message;
+
+  if (
+    !userId ||
+    !eventId ||
+    !InMemoryEvents[eventId] ||
+    !InMemoryINRBalances[userId]
+  ) {
+    const data = JSON.stringify({
+      messageId,
+      status: "FAILED",
+    });
+    await publisher.publish(`getAllOrders::${messageId}`, data);
+    return;
+  }
+  let orders: OrderInterface[] = [];
+  if (InMemoryEvents[eventId]!.endTime > new Date()) {
+    orders = Object.values(InMemoryOrders).filter(
+      (order) =>
+        order.userId == userId &&
+        (order.status == "MATCHED" || order.status == "PENDING") &&
+        order.eventId == eventId &&
+        order.matchedQuantity > 0
+    );
+  }
+  const data = JSON.stringify({
+    messageId,
+    status: "SUCCESS",
+    orders: orders,
+  });
+  await publisher.publish(`getAllOrders::${messageId}`, data);
+  return;
+};
+
 export const exitOrder = async (message: any) => {
   const { userId, eventId, side, price, quantity, orderId, messageId } =
     message;
@@ -463,6 +518,7 @@ export const exitOrder = async (message: any) => {
     await publisher.publish(`exitOrder::${messageId}`, data);
     return;
   }
+  InMemoryOrders[orderId]!.status = "PENDING";
   // do core logic call
   await exit(eventId, side, price, quantity, orderId, userId);
   const data = JSON.stringify({
@@ -499,7 +555,10 @@ export async function exit(
             continue;
           }
           const sellerOrderId = sellerOrder.orderId;
-          if (sellerOrderId.endsWith("+pseudo")) {
+          if (
+            sellerOrderId.endsWith("+pseudo") &&
+            InMemoryOrders[sellerOrderId]!.status != "PENDING"
+          ) {
             continue;
           }
 
@@ -525,9 +584,11 @@ export async function exit(
 
           // Balances
           sellerOrder.quantity -= sellerQuantity;
+          InMemoryOrders[sellerOrderId]!.matchedQuantity -= sellerQuantity;
+          InMemoryOrders[orderId]!.matchedQuantity -= sellerQuantity;
+          order.quantity -= sellerQuantity;
           remainingQty -= sellerQuantity;
           tradeQty -= sellerQuantity;
-
           // update the pool
           if (side == "YES") {
             InMemoryStockBalance[eventId]![userId]!.yesQty -= sellerQuantity;
@@ -575,6 +636,7 @@ export async function exit(
       id: orderId,
       status: "EXECUTED",
     };
+    InMemoryOrders[orderId]!.status = "EXECUTED";
     await BroadcastChannel("order_executed", orderExit);
     console.log(InMemoryOrders[orderId]);
   }
@@ -610,13 +672,13 @@ export async function exit(
       });
     }
   }
-  const broadcastData = {
+  const broadcastOrderBook = {
     eventId,
     orderbook: {
-      Yes: orderbook.YES,
-      No: orderbook.NO,
+      YES: orderbook.YES,
+      NO: orderbook.NO,
     },
   };
-  await BroadcastChannel("orderbook", broadcastData);
+  await BroadcastChannel("orderbook", broadcastOrderBook);
   return;
 }

@@ -1,5 +1,6 @@
 import OrderBook from "@/components/OrderBook";
 import OrderPlace from "@/components/OrderPlace";
+import Orders from "@/components/Orders";
 import { authOptions } from "@/lib/auth";
 import axios from "axios";
 import { getServerSession } from "next-auth";
@@ -54,8 +55,11 @@ export default async function Page({
           {/* ORDERBOOK */}
           <OrderBook eventId={String(eventId)} />
         </div>
-        <div className="bg-white flex-1 xl:max-w-[400px] overflow-x-hidden mt-10 rounded-xl border-1 border-neutral-200 h-fit p-4">
-          <OrderPlace userBalance={100000} eventId={String(eventId)} />
+        <div className="flex-1 xl:max-w-[400px] overflow-x-hidden mt-10">
+          <div className="bg-white rounded-xl border border-neutral-200 h-fit p-4">
+            <OrderPlace userBalance={100000} eventId={String(eventId)} />
+          </div>
+          <Orders eventId={String(eventId)} />
         </div>
       </div>
     </div>

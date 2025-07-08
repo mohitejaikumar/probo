@@ -146,6 +146,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   userId: 'userId',
   eventId: 'eventId',
   quantity: 'quantity',
+  matchedQuantity: 'matchedQuantity',
   side: 'side',
   type: 'type',
   price: 'price',

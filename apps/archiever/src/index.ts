@@ -136,6 +136,21 @@ async function startArchiever() {
                       },
                     },
                   });
+                  // matched quantity update
+                  if (message.type == "exit_trade") {
+                    await tx.order.updateMany({
+                      where: {
+                        id: {
+                          in: [parsedData.buyOrderId, parsedData.sellOrderId],
+                        },
+                      },
+                      data: {
+                        matchedQuantity: {
+                          decrement: parsedData.buyQuantity,
+                        },
+                      },
+                    });
+                  }
                 });
               } catch (err) {
                 console.log("Error: ", err);
@@ -162,6 +177,7 @@ async function startArchiever() {
                       side: parsedData.side,
                       price: originalOrder.price,
                       quantity: parsedData.remainingQty,
+                      matchedQuantity: 0,
                       createdAt: new Date(originalOrder.createdAt),
                       type: "SELL",
                     },
@@ -233,6 +249,34 @@ async function startArchiever() {
                     yesQty: parsedData.yesQty,
                     noQty: parsedData.noQty,
                   },
+                });
+              } catch (err) {
+                console.log("Error: ", err);
+              }
+            } else if (message.type == "order_update") {
+              try {
+                await prisma.$transaction(async (tx) => {
+                  await tx.order.updateMany({
+                    where: {
+                      id: {
+                        in: [parsedData.sellerOrderId, parsedData.buyerOrderId],
+                      },
+                    },
+                    data: {
+                      matchedQuantity: {
+                        increment: parsedData.matchedQuantity,
+                      },
+                    },
+                  });
+
+                  await tx.order.update({
+                    where: {
+                      id: parsedData.sellerOrderId,
+                    },
+                    data: {
+                      status: parsedData.status,
+                    },
+                  });
                 });
               } catch (err) {
                 console.log("Error: ", err);
