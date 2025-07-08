@@ -25,6 +25,7 @@ export async function createOrder(
     },
     order_meta: {
       return_url: "https://895a5762cb3e.ngrok-free.app/",
+      notify_url: process.env.NEXT_CASHFREE_NOTIFY_URL,
     },
     order_note: "",
   };
