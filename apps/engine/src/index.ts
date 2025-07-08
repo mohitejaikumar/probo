@@ -90,6 +90,8 @@ app.post("/cashfree-webhook", async (req, res) => {
     const customerId = data?.customer_details?.customer_id;
     const customerPhone = data?.customer_details?.customer_phone;
 
+    InMemoryINRBalances[customerId]!.balance += amount;
+
     console.log(`✅ Payment Success for Order: ${orderId}`);
     console.log(`→ Customer ID: ${customerId}`);
     console.log(`→ Customer Phone: ${customerPhone}`);
